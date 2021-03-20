@@ -1,3 +1,5 @@
+gitlog.txt
+
 Tuomass-MBP:tiedostoja tuomas$ git log --stat | cat
 commit c0e5115b0b79bc1ef60e3a9204eb0c9bd8b99048
 Author: Tuomas Alanen <tuomas@paaryna.fi>
