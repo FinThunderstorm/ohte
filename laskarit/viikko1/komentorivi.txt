@@ -1,0 +1,26 @@
+tualanen@melkki:~$ tree
+.
+├── Desktop -> /home/ad/home/t/tualanen/Desktop
+├── Documents -> /home/ad/home/t/tualanen/Documents
+├── Downloads -> /home/ad/home/t/tualanen/Downloads
+├── Music
+├── Pictures
+├── Public
+├── Templates
+├── Videos
+├── kurssit
+│   └── ot2021
+│       └── viikko1
+│           └── unicafe
+│               ├── poetry.lock
+│               ├── pyproject.toml
+│               └── src
+│                   ├── index.py
+│                   ├── kassapaate.py
+│                   ├── maksukortti.py
+│                   └── tests
+│                       ├── __init__.py
+│                       └── maksukortti_test.py
+└── public_html
+
+15 directories, 7 files

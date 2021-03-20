@@ -1,0 +1,114 @@
+Tuomass-MBP:tiedostoja tuomas$ git log --stat | cat
+commit c0e5115b0b79bc1ef60e3a9204eb0c9bd8b99048
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 14:29:04 2021 +0200
+
+    removed file1 changed file2 to file22
+
+ tiedostoja/file1             | 1 -
+ tiedostoja/{file2 => file22} | 0
+ 2 files changed, 1 deletion(-)
+
+commit 12be96679ae40bdbfe660490543e3041b02d8f6c
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 14:26:19 2021 +0200
+
+    added folder tiedostoja
+
+ tiedostoja/file1 | 1 +
+ tiedostoja/file2 | 1 +
+ tiedostoja/file3 | 1 +
+ 3 files changed, 3 insertions(+)
+
+commit 2750a79cdd0359e7c5da7de076d53238ba6d9385
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:44:49 2021 +0200
+
+    edited files
+
+ eka.txt    | 16 ++--------------
+ kolmas.txt |  2 +-
+ 2 files changed, 3 insertions(+), 15 deletions(-)
+
+commit f2ed1c0b1df6eafb55631c15c4b49745bc7dd651
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:43:18 2021 +0200
+
+    changed name
+
+ tiedosto.txt => eka.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit d0ebd6eeba6ae832e19f695ca5f35221305de0b4
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:42:34 2021 +0200
+
+    removed toinen.txt
+
+ toinen.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit 683eb61127810496c8dbb4cf38308145303820b2
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:41:02 2021 +0200
+
+    editetd tiedosto.txt
+
+ tiedosto.txt | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
+
+commit 4f42ac9a0223efb4830160c6b2085822f452da93
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:38:53 2021 +0200
+
+    Lorem Ipsum Dolor Sit Amet
+
+ tiedosto.txt | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+
+commit 3f5001620b267492448da9cb3fd39da8cb8640c7
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:28:24 2021 +0200
+
+    stuffin lisäys
+
+ stuff/jokin.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d7f29b8cb4efbf94100bac7ed518494ebb02b524
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:27:36 2021 +0200
+
+    lisää edittiä
+
+ kolmas.txt | 2 ++
+ toinen.txt | 1 +
+ 2 files changed, 3 insertions(+)
+
+commit f8a6f51e7c46d2013ca4c7eecd5005e224663383
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:26:40 2021 +0200
+
+    laiskan echon tulos
+
+ kolmas.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c7d18c05d203df379b3e9648248ddfc7304512ff
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:20:16 2021 +0200
+
+    muutos & lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit fc96cdd487cb1df816b0de21f98e2561e8a6168a
+Author: Tuomas Alanen <tuomas@paaryna.fi>
+Date:   Sat Mar 20 13:18:39 2021 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
