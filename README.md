@@ -1,4 +1,4 @@
-# Ohjelmistotekniikka, kevät 2021 - kurssitehtävien palautukset
+# **Ohjelmistotekniikka**, _kevät 2021_ - kurssitehtävien palautukset
 
 Kurssisuoritus Helsingin yliopiston [**Ohjelmistotekniikan**](https://ohjelmistotekniikka-hy.github.io) kurssille _keväällä 2021_.
 
