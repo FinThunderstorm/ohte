@@ -6,6 +6,12 @@ Kurssisuoritus Helsingin yliopiston [**Ohjelmistotekniikan**](https://ohjelmisto
 
 ### Viikko 1
 
-[komentorivi.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/komentorivi.txt)
+- [komentorivi.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/komentorivi.txt)
+- [gitlog.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/gitlog.txt)
 
-[gitlog.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/gitlog.txt)
+## Muistio
+
+### Dokumentaatio
+
+- [Vaatimusmäärittely](./dokumentaatio/vaatimusmäärittely.md)
+- [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)

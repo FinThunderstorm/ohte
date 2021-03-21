@@ -14,6 +14,10 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
   - tkinter -graafinen kirjasto
 - MongoDB -tietokanta taustalla
 
+## Käyttöliittymähahmotelma
+
+![](./kuvat/interface.png)
+
 ## Ensimmäisen vaiheen tarjoamat toiminnallisuudet
 
 ### Käyttäjänhallinta
@@ -35,7 +39,9 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 - Markdown-muotoilulle tuki
 - Muistioiden lajitteleminen kansioittain
 - Median upottaminen
-- Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla
-- Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
-- Käyttäjähallinta & tiimit
+- Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja
+- Asetukset
+- Käyttäjähallinta
 - Muistikirjan jakaminen toiselle käyttäjälle
+- Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
+- Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla
