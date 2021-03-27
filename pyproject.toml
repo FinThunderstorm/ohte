@@ -7,6 +7,8 @@ authors = ["Tuomas Alanen <tuomas@paaryna.fi>"]
 [tool.poetry.dependencies]
 python = "^3.6"
 python-dotenv = "^0.15.0"
+pymongo = "^3.11.3"
+dnspython = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.7.2"

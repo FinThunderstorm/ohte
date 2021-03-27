@@ -13,9 +13,13 @@ Kurssisuoritus Helsingin yliopiston [**Ohjelmistotekniikan**](https://ohjelmisto
 
 - [testikattavuus.png](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko2/testikattavuus.png)
 
-## Muistio
+## Projekti: Muistio
 
 ### Dokumentaatio
 
 - [Vaatimusmäärittely](./dokumentaatio/vaatimusmäärittely.md)
 - [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)
+
+### Huomioitavia:
+
+- Pymongon sertifikaatin validointiongelman ratkaisu: <https://stackoverflow.com/a/54511693>
