@@ -7,13 +7,14 @@ authors = ["Tuomas Alanen <tuomas@paaryna.fi>"]
 [tool.poetry.dependencies]
 python = "^3.6"
 python-dotenv = "^0.15.0"
-pymongo = "^3.11.3"
 dnspython = "^2.1.0"
+mongoengine = "^0.23.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.7.2"
 autopep8 = "^1.5.6"
 freezegun = "^1.1.0"
+mongomock = "^3.22.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
