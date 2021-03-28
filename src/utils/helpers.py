@@ -16,3 +16,7 @@ def get_test_memo(index=None):
     if index:
         memo["title"] = "Test Memo " + str(index)
     return memo
+
+
+def get_id(sid=None):
+    return ObjectId(sid)

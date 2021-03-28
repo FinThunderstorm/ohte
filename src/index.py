@@ -24,6 +24,9 @@ print('>', memos)
 for memo in memos:
     print(memo.title, '-', memo.date)
 
+memorepo.count_memos()
+print('get-memo-test:', memorepo.get_memo(saved_memo.id).title)
+
 
 # try:
 #     memo_id = memos.insert_one(memo.format()).inserted_id

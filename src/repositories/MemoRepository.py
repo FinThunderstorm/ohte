@@ -6,7 +6,6 @@ from utils.helpers import get_time
 class MemoRepository:
     def __init__(self, prod=True):
         self.connection = connect_database(prod)
-        print(self.connection)
 
     def new_memo(self, memo):
         new_memo = Memo(
@@ -18,17 +17,34 @@ class MemoRepository:
         saved_memo = new_memo.save()
         return saved_memo
 
+    def update_memo(self, memo):
+        updated_memo = memo.save()
+        return updated_memo
+
+    def remove_memo(self, memo_id):
+        memo_to_be_removed = self.get_memo(memo_id)
+        try:
+            memo_to_be_removed.delete()
+            return True
+        except:
+            return False
+
+    def get_memo(self, memo_id):
+        exact_memo = self.get_all_memos()(id=memo_id)
+        print(exact_memo)
+        return exact_memo.first()
+
     def get_all_memos(self):
         all_memos = Memo.objects
-        print(type(all_memos))
         return all_memos
 
     def count_memos(self):
-        memos = self.get_all_memos()
-        count = 0
-        for memo in memos:
-            count += 1
-        return count
+        return self.get_all_memos().count()
 
-    def find_memo(self, search_term):
-        pass
+    def filter_memos(self, field, search_term):
+        cases = {
+            "title": self.get_all_memos()(title__icontains=search_term),
+            "content": self.get_all_memos()(content__icontains=search_term),
+            "author_id": self.get_all_memos()(author_id=search_term),
+        }
+        return cases[field]
