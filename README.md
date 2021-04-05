@@ -2,24 +2,13 @@
 
 Kurssisuoritus Helsingin yliopiston [**Ohjelmistotekniikan**](https://ohjelmistotekniikka-hy.github.io) kurssille _keväällä 2021_.
 
-## Laskarit
-
-### Viikko 1
-
-- [komentorivi.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/komentorivi.txt)
-- [gitlog.txt](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko1/gitlog.txt)
-
-### Viikko 2
-
-- [testikattavuus.png](https://github.com/FinThunderstorm/ohte/blob/master/laskarit/viikko2/testikattavuus.png)
-
-## Projekti: Muistio
+## Muistio
 
 ### Dokumentaatio
 
 - [Vaatimusmäärittely](./dokumentaatio/vaatimusmäärittely.md)
 - [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)
 
-### Huomioitavia:
+### Notes to myself:
 
 - Pymongon sertifikaatin validointiongelman ratkaisu: <https://stackoverflow.com/a/54511693>
