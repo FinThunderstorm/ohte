@@ -1,6 +1,4 @@
 from mongoengine import Document, StringField, ObjectIdField, DateTimeField
-from bson.objectid import ObjectId
-from datetime import datetime
 
 
 class Memo(Document):

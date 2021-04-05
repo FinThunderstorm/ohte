@@ -17,12 +17,11 @@ class UserRepository:
             )
             saved_user = new_user.save()
             return saved_user
-        except Exception as e:
-            print(e)
+        except:
             return None
 
     def get_all_users(self):
-        return User.objects
+        return User.objects  # tämä on ihan validi, olisiko lintterin ohitus tähän?
 
     def count_all_users(self):
         return self.get_all_users().count()
@@ -39,7 +38,7 @@ class UserRepository:
         try:
             if check_password(bytes(password, 'utf-8'), bytes(user.password, 'utf-8')):
                 return user
-        except Exception as e:
+        except:
             return None
 
     def update_user(self, user):
