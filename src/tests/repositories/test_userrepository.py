@@ -70,3 +70,22 @@ class TestMemoRepository(unittest.TestCase):
         queried_user = self.userrepo.find_one_user("id", saved_user.id)
         self.assertEqual(queried_user, saved_user)
         self.assertEqual(queried_user.id, saved_user.id)
+
+    def test_update_user_really_changes(self):
+        user = get_test_user(self.userrepo.count_all_users() + 1)
+        saved_user = self.userrepo.new_user(user)
+        saved_user.firstname = "Updated"
+        self.userrepo.update_user(saved_user)
+        queried_user = self.userrepo.find_one_user("id", saved_user.id)
+        self.assertEqual(queried_user.firstname, saved_user.firstname)
+        self.assertEqual(queried_user.id, saved_user.id)
+
+    def test_remove_user_works_valid_id(self):
+        user = get_test_user(self.userrepo.count_all_users() + 1)
+        saved_user = self.userrepo.new_user(user)
+        remove_result = self.userrepo.remove_user(saved_user.id)
+        self.assertTrue(remove_result)
+
+    def test_remove_user_returns_false_non_valid_id(self):
+        remove_result = self.userrepo.remove_user(get_id())
+        self.assertFalse(remove_result)

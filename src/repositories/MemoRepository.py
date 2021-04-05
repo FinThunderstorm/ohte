@@ -31,7 +31,6 @@ class MemoRepository:
 
     def get_memo(self, memo_id):
         exact_memo = self.get_all_memos()(id=memo_id)
-        print(exact_memo)
         return exact_memo.first()
 
     def get_all_memos(self):

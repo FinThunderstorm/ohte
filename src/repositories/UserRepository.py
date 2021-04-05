@@ -41,3 +41,15 @@ class UserRepository:
                 return user
         except Exception as e:
             return None
+
+    def update_user(self, user):
+        updated_user = user.save()
+        return updated_user
+
+    def remove_user(self, user_id):
+        user_to_be_removed = self.find_one_user("id", user_id)
+        try:
+            user_to_be_removed.delete()
+            return True
+        except:
+            return False
