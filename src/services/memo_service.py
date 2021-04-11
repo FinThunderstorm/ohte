@@ -9,9 +9,12 @@ class MemoService:
                  user_repository=defualt_user_repository):
         self.memo_repository = memo_repository
         self.user_repository = user_repository
+        print('ms:mr:', memo_repository, type(memo_repository))
+        print('sms:smr:', self.memo_repository, type(self.memo_repository))
 
     def create(self, author_id, title=None, content=""):
         # handle memoside
+        print(author_id, type(author_id))
         memo = {
             "author_id": author_id,
             "title": title if title else "Memo "+get_time(),
@@ -30,7 +33,7 @@ class MemoService:
         return None
 
     def update(self, memo_id, author_id, title, content, date):
-        memo = self.memo_repository.get(memo_id)
+        memo = self.memo_repository.get('id', memo_id)
         memo.author_id = author_id
         memo.title = title
         memo.content = content
@@ -39,7 +42,7 @@ class MemoService:
         return updated_memo
 
     def remove(self, memo_id):
-        author_id = self.memo_repository.get("memo_id", memo_id).author_id
+        author_id = self.memo_repository.get("id", memo_id).author_id
         memo_result = self.memo_repository.remove(memo_id)
         if memo_result:
             author = self.user_repository.get("user_id", author_id)
@@ -54,14 +57,12 @@ class MemoService:
         return False
 
     def get(self, mode, search_term=None):
-        modes = {
-            "all": self.memo_repository.get_all(),
-            "memo_id": self.memo_repository.get("memo_id", search_term),
-            "author_id": self.memo_repository.get("author_id", search_term),
-        }
-        result = modes[mode]
+        result = self.memo_repository.get(mode, search_term)
         return result
 
-    def count(self, mode):
-        amount = self.memo_repository.count(mode)
-        return amount
+    def count(self, mode, search_term=None):
+        print('self:', self, type(self))
+        print('memoservice: memorepo:', self.memo_repository,
+              type(self.memo_repository))
+        result = self.memo_repository.count(mode, search_term)
+        return result

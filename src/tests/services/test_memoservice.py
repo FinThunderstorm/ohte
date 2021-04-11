@@ -8,28 +8,28 @@ from services.memo_service import MemoService
 class TestMemoService(unittest.TestCase):
     def setUp(self):
         self.memo_service = MemoService()
-        self.before = self.memo_service.count()
+        self.before = self.memo_service.count('all')
         self.test_memo = get_test_memo()
         self.saved_memo = self.memo_service.create(
             self.test_memo["author_id"],
             self.test_memo["title"],
-            self.test_memo["content"])
+            self.test_memo["content"]
+        )
+        self.author_id = self.test_memo["author_id"]
 
     def test_create_returns_new_memo_with_all_attributes(self):
-        author_id = get_id()
         title = "Cool new memo"
         content = "This is a test."
-        new_memo = self.memo_service.create_new_memo(author_id, title, content)
-        self.assertEqual(new_memo.author_id, author_id)
+        new_memo = self.memo_service.create(self.author_id, title, content)
+        self.assertEqual(new_memo.author_id, self.author_id)
         self.assertEqual(new_memo.title, title)
         self.assertEqual(new_memo.content, content)
 
 #    def test_create_adds_memo_id_to_user_field(self):
 
     def test_create_returns_memo_with_default_title(self):
-        author_id = get_id()
-        new_memo = self.memo_service.create_new_memo()
-        self.assertEqual(new_memo.author_id, author_id)
+        new_memo = self.memo_service.create(self.author_id)
+        self.assertEqual(new_memo.author_id, self.author_id)
         self.assertEqual(new_memo.title, "Memo "+get_time())
         self.assertEqual(new_memo.content, "")
 
@@ -44,6 +44,7 @@ class TestMemoService(unittest.TestCase):
         self.assertEqual(updated_memo.title, title)
         self.assertEqual(updated_memo.content, content)
         self.assertEqual(updated_memo.id, self.saved_memo.id)
+        self.assertEqual(updated_memo.author_id, self.saved_memo.author_id)
 
     def test_remove_removes_memo_with_valid_id(self):
         result = self.memo_service.remove(self.saved_memo.id)
@@ -59,19 +60,19 @@ class TestMemoService(unittest.TestCase):
         self.assertFalse(result)
         self.assertEqual(after, self.before)
 
-    def test_get_returns_right_memo(self):
-        result = self.memo_service.get(self.saved_memo.id)
-        self.assertEqual(result.id, self.saved_memo.id)
-        self.assertEqual(result.title, self.saved_memo.title)
-        self.assertEqual(result.content, self.saved_memo.content)
-        self.assertEqual(result.author_id, self.saved_memo.author_id)
-        self.assertEqual(result.date, self.saved_memo.date)
+    # def test_get_returns_right_memo(self):
+    #     result = self.memo_service.get(self.saved_memo.id)
+    #     self.assertEqual(result.id, self.saved_memo.id)
+    #     self.assertEqual(result.title, self.saved_memo.title)
+    #     self.assertEqual(result.content, self.saved_memo.content)
+    #     self.assertEqual(result.author_id, self.saved_memo.author_id)
+    #     self.assertEqual(result.date, self.saved_memo.date)
 
-    def test_get_returns_none_if_no_memo(self):
-        result = self.memo_service.get(get_id())
-        self.assertIsNone(result)
+    # def test_get_returns_none_if_no_memo(self):
+    #     result = self.memo_service.get(get_id())
+    #     self.assertIsNone(result)
 
-    def test_get_all_returns_all_memos(self):
-        result = self.memo_service.get_all()
-        length = self
-        self.assertEqual(length, self.before)
+    # def test_get_all_returns_all_memos(self):
+    #     result = self.memo_service.get()
+    #     length = self
+    #     self.assertEqual(length, self.before)
