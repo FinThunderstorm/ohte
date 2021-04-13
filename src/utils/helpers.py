@@ -1,15 +1,27 @@
 from bson.objectid import ObjectId
 from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime
+from entities.user import User
 
 
 def get_time():
     return datetime.utcnow()
 
 
+def get_test_memo_user():
+    user = User(
+        id=get_id('6072d33e3a3c627a49901ce8'),
+        firstname="Memo",
+        lastname="User",
+        username="memouser",
+        password="$2b$12$1kt3hr6qYP4HPG5pdGZwHOW8QrYhZW79hpTbS2Ouw.oxr2pO9BYyG",
+    )
+    return user
+
+
 def get_test_memo(index=None):
     memo = {
-        "author_id": ObjectId(),
+        "author": get_test_memo_user(),
         "title": "Test Memo",
         "content": "Lorem ipsum dolor sit amet.",
         "date": get_time(),

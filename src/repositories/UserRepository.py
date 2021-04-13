@@ -1,13 +1,14 @@
 from entities.user import User
 from utils.database_handler import connect_database
-from utils.helpers import generate_password_hash, check_password
+from utils.helpers import generate_password_hash, check_password, get_id
 
 
 class UserRepository:
-    def __init__(self, prod=True):
-        self.connection = connect_database(prod)
+    def __init__(self):
+        #self.connection = connect_database(prod)
+        pass
 
-    def new_user(self, user):
+    def new(self, user):
         try:
             new_user = User(
                 firstname=user["firstname"],
@@ -17,38 +18,52 @@ class UserRepository:
             )
             saved_user = new_user.save()
             return saved_user
-        except:
+        except Exception as e:
+            print(e)
             return None
 
-    def get_all_users(self):
-        return User.objects  # tämä on ihan validi, olisiko lintterin ohitus tähän?
+    def __get_all(self):
+        return User.objects
 
-    def count_all_users(self):
-        return self.get_all_users().count()
+    def __get_id(self, search_term):
+        if type(search_term) == type(get_id()):
+            return self.__get_all()(id=get_id(search_term)).first()
+        return None
 
-    def find_one_user(self, field, search_term):
+    def __get_username(self, search_term):
+        if search_term:
+            return self.__get_all()(username=search_term).first()
+        return None
+
+    def get(self, mode="all", search_term=None):
         cases = {
-            "username": self.get_all_users()(username=search_term),
-            "id": self.get_all_users()(id=search_term)
+            "all": self.__get_all(),
+            "id": self.__get_id(search_term),
+            "username": self.__get_username(search_term),
         }
-        return cases[field].first()
+        return cases[mode]
+
+    def count(self, mode="all", search_term=None):
+        return self.get(mode, search_term).count()
 
     def login(self, username, password):
-        user = self.find_one_user("username", username)
+        user = self.get("username", username)
         try:
             if check_password(bytes(password, 'utf-8'), bytes(user.password, 'utf-8')):
                 return user
         except:
             return None
 
-    def update_user(self, user):
+    def update(self, user):
         updated_user = user.save()
         return updated_user
 
-    def remove_user(self, user_id):
-        user_to_be_removed = self.find_one_user("id", user_id)
+    def remove(self, user):
         try:
-            user_to_be_removed.delete()
+            user.delete()
             return True
         except:
             return False
+
+
+user_repository = UserRepository()

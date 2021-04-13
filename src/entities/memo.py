@@ -1,8 +1,8 @@
-from mongoengine import Document, StringField, ObjectIdField, DateTimeField
+from mongoengine import Document, StringField, ReferenceField, DateTimeField
 
 
 class Memo(Document):
-    author_id = ObjectIdField(required=True)
+    author = ReferenceField('User', required=True)
     title = StringField(required=True, max_length=100)
     content = StringField()
     date = DateTimeField(required=True)

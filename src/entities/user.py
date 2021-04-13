@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, ObjectIdField
+from mongoengine import Document, StringField, ListField, ReferenceField
 
 
 class User(Document):
@@ -6,4 +6,4 @@ class User(Document):
     lastname = StringField(required=True, max_length=25)
     username = StringField(required=True, max_length=40, unique=True)
     password = StringField(required=True)
-    memos = ListField(ObjectIdField(), default=list)
+    memos = ListField(ReferenceField('Memo'), default=list)
