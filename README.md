@@ -31,6 +31,8 @@ poetry install
 poetry run invoke start
 ```
 
+**Huom!** Jos osa riveistä tulostuu päällekäin tai tekstiä ei voi pyyhkiä, niin Ongelman voi kiertää käynnistämällä ohjelman komennolla `python3 src/index.py`. Poetryn invokella suorittaminen jostain syystä vaikuttaa input-metodin toimintaan.
+
 ### Komennot
 
 - Ohjelman suorittaminen tapahtuu komennolla `poetry run invoke start`
