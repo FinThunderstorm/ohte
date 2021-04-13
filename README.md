@@ -13,7 +13,7 @@ Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä usea
 
 ### Asentaminen
 
-1. Alusta .env tiedosto uudelleennimeämällä _.examle.env_ muotoon _.env_ ja täydennä tietokannan käyttäjätiedot korvaamalla _username_ ja _password_ Labtoolista löytyvillä tai pyytämällä Telegramista _@finthunderstorm_. Tiedosto näyttää lopulta seuraavalta:
+1. Alusta .env tiedosto uudelleennimeämällä _.examle.env_ muotoon _.env_ ja täydennä tietokannan käyttäjätiedot korvaamalla _username_ ja _password_ pyytämällä Telegramista _@finthunderstorm_. Tiedosto näyttää lopulta seuraavalta:
 
 ```
 DATABASE_URI=mongodb+srv://username:password@ohte.bu0r9.mongodb.net/muistio?retryWrites=true&w=majority
