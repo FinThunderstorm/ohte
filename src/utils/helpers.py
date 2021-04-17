@@ -2,6 +2,7 @@ from bson.objectid import ObjectId
 from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime
 from entities.user import User
+from entities.memo import Memo
 
 
 def get_time():
@@ -31,6 +32,16 @@ def get_test_memo(index=None):
     return memo
 
 
+def get_test_memo_obj():
+    memo = Memo(
+        author=get_test_memo_user(),
+        title="not",
+        content="valid",
+        date=get_time(),
+    )
+    return memo
+
+
 def get_test_user(index=None):
     user = {
         "firstname": "Test",
@@ -39,6 +50,18 @@ def get_test_user(index=None):
         "password": "password",
     }
     return user
+
+
+def get_type_id():
+    return type(get_id())
+
+
+def get_type_user():
+    return type(get_test_memo_user())
+
+
+def get_type_memo():
+    return type(get_test_memo_obj())
 
 
 def generate_password_hash(password):

@@ -1,6 +1,6 @@
 from entities.memo import Memo
 from utils.database_handler import connect_database
-from utils.helpers import get_time, get_id
+from utils.helpers import get_time, get_id, get_test_memo_user, get_type_id, get_type_user
 
 
 class MemoRepository:
@@ -33,17 +33,27 @@ class MemoRepository:
         return all_memos
 
     def __get_id(self, search_term):
-        if type(search_term) == type(get_id()):
+        if type(search_term) == get_type_id():
             return self.__get_all()(id=search_term).first()
         return None
 
-    def get(self, mode, search_term=None):
+    def __get_author(self, search_term):
+        if type(search_term) == get_type_user():
+            authors_memos = []
+            for memo in self.__get_all():
+                if memo.author == search_term:
+                    authors_memos.append(memo)
+
+            return authors_memos
+        return None
+
+    def get(self, mode="all", search_term=None):
         cases = {
             "all": self.__get_all(),
             "id": self.__get_id(search_term),
             "title": self.__get_all()(title__icontains=search_term),
             "content": self.__get_all()(content__icontains=search_term),
-            "author": self.__get_all()(author=search_term),
+            "author": self.__get_author(search_term),
         }
         return cases[mode]
 
