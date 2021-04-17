@@ -1,4 +1,5 @@
 from repositories.UserRepository import user_repository as default_user_repository
+from utils.helpers import check_password
 
 
 class UserService:
@@ -6,9 +7,9 @@ class UserService:
         self.user_repository = user_repository
 
     def login(self, username, password):
-        user = self.get("username", username)
+        user = self.user_repository.get("username", username)
         try:
-            if check_password(bytes(password, 'utf-8'), bytes(user.password, 'utf-8')):
+            if check_password(password, user.password):
                 return user
         except:
             return None

@@ -1,7 +1,7 @@
 import unittest
 from freezegun import freeze_time
 from utils.helpers import get_time, get_test_user, get_test_user_obj, get_id
-from utils.database_handler import connect_database, disconnect_database
+from utils.database_handler import connect_test_database, disconnect_database
 from repositories.UserRepository import user_repository
 
 
@@ -9,7 +9,7 @@ from repositories.UserRepository import user_repository
 class TestUserRepository(unittest.TestCase):
 
     def setUp(self):
-        connect_database(prod=False)
+        connect_test_database()
         self.userrepo = user_repository
         self.before = self.userrepo.count()
         self.test_user = get_test_user(self.before + 1)  # was + 1
@@ -71,6 +71,7 @@ class TestUserRepository(unittest.TestCase):
         self.assertIsNone(saved_duplicate_user)
 
     # update
+
     def test_update_user_changes_values(self):
         self.saved_user.firstname = "Updated"
         updated_user = self.userrepo.update(self.saved_user)

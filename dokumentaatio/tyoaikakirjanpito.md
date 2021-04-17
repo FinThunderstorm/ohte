@@ -15,6 +15,9 @@
 | 13.4     | 2h (l) | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten |
 | 17.4     | 2h     | MemoRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1  |
 | 17.4     | 1h     | UserRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1  |
+| 17.4     | 0,5h   | Aiemman tekstikäyttöliittymän eristäminen tulevan GUI:n tieltä omaksi luokaksi |
+| 17.4     | 2h     | MemoServicen testit kuntoon ja sovelluslogiikan v1                             |
+| 17.4     | Xh     | UserServicen versio 1 ja testit                                                |
 | Yhteensä | 28h    |                                                                                |
 
 (l) = yhteensä laskettu tähän saakka

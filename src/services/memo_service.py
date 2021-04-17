@@ -1,5 +1,4 @@
 from utils.helpers import get_time
-from bson.objectid import ObjectId
 from repositories.UserRepository import user_repository as default_user_repository
 from repositories.MemoRepository import memo_repository as default_memo_repository
 
@@ -12,9 +11,10 @@ class MemoService:
         self.user_repository = user_repository
 
     def create(self, author_id, title=None, content=""):
-        # handle memoside
-
         author = self.user_repository.get('id', author_id)
+        if not author:
+            return None
+
         memo = {
             "author": author,
             "title": title if title else "Memo "+str(get_time()),
@@ -23,13 +23,10 @@ class MemoService:
         }
         saved_memo = self.memo_repository.new(memo)
 
-        # handle user side -> add new memo to user field
         author.memos.append(saved_memo.id)
-        updated_user = self.user_repository.update(author)
+        self.user_repository.update(author)
 
-        if saved_memo and updated_user:
-            return saved_memo
-        return None
+        return saved_memo
 
     def update(self, memo_id, author_id, title, content, date):
         memo = self.memo_repository.get('id', memo_id)
@@ -42,17 +39,16 @@ class MemoService:
 
     def remove(self, memo_id):
         old_memo = self.memo_repository.get('id', memo_id)
-        author = old_memo.author
         memo_result = self.memo_repository.remove(old_memo)
         if memo_result:
+            author = old_memo.author
             authors_memos = []
             for memo in author.memos:
                 if memo.id != old_memo.id:
                     authors_memos.append(memo)
             author.memos = authors_memos
-            user_result = self.user_repository.update(author)
-            if user_result:
-                return True
+            self.user_repository.update(author)
+            return True
         return False
 
     def get(self, mode="all", search_term=None):
@@ -60,6 +56,8 @@ class MemoService:
         return result
 
     def count(self, mode="all", search_term=None):
+        if mode == "author":
+            search_term = self.user_repository.get("id", search_term)
         result = self.memo_repository.count(mode, search_term)
         return result
 

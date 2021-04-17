@@ -1,12 +1,16 @@
+from datetime import datetime
 from bson.objectid import ObjectId
 from bcrypt import gensalt, hashpw, checkpw
-from datetime import datetime
 from entities.user import User
 from entities.memo import Memo
 
 
 def get_time():
     return datetime.utcnow()
+
+
+def get_time_timestamp(year, month, day, hours, minutes, seconds):
+    return datetime(year, month, day, hours, minutes, seconds)
 
 
 def get_test_memo_user(uid="6072d33e3a3c627a49901ce8", username="memouser"):
@@ -75,7 +79,7 @@ def generate_password_hash(password):
 
 
 def check_password(password, hashed_password):
-    result = checkpw(password, hashed_password)
+    result = checkpw(bytes(password, 'utf-8'), bytes(hashed_password, 'utf-8'))
     return result
 
 

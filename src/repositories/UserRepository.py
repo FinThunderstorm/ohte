@@ -1,3 +1,5 @@
+from mongoengine.queryset import NotUniqueError
+
 from entities.user import User
 from utils.helpers import generate_password_hash, get_id, get_type_id
 
@@ -16,7 +18,7 @@ class UserRepository:
             )
             saved_user = new_user.save()
             return saved_user
-        except:  # tähän jos saisi tarkenteena mongoenginen not unique key exceptionin niin ois aika jeba
+        except NotUniqueError:
             return None
 
     def update(self, user):
@@ -29,33 +31,34 @@ class UserRepository:
             return True
         return False
 
-    def __get_all(self):
-        users = User.objects
+    def __get_all_users(self):
+        users = User.objects  # pylint: disable=no-member
         return users
 
     def __get_id(self, search_term):
         if isinstance(search_term, get_type_id()):
-            return self.__get_all()(id=get_id(search_term)).first()
+            return self.__get_all_users()(id=get_id(search_term)).first()
         return None
 
     def __get_username(self, search_term):
         if search_term:
-            return self.__get_all()(username=search_term).first()
+            return self.__get_all_users()(username=search_term).first()
         return None
 
     def get(self, mode="all", search_term=None):
         cases = {
-            "all": self.__get_all(),
+            "all": self.__get_all_users(),
             "id": self.__get_id(search_term),
             "username": self.__get_username(search_term),
         }
         return cases[mode]
 
     def count(self, mode="all", search_term=None):
-        if mode == "all":
-            return self.get(mode, search_term).count()
-        else:
+        if mode == "id":
             return 1 if self.get(mode, search_term) else 0
+        if mode == "username":
+            return 1 if self.get(mode, search_term) else 0
+        return self.get(mode, search_term).count()
 
 
 user_repository = UserRepository()
