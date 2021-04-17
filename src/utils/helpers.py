@@ -32,6 +32,10 @@ def get_test_memo(index=None):
     return memo
 
 
+def get_test_user_obj(uid="6072d33e3a3c627a49901ce8", username="memouser"):
+    return get_test_memo_user(uid, username)
+
+
 def get_test_memo_obj():
     memo = Memo(
         author=get_test_memo_user(),

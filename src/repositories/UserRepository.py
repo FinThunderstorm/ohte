@@ -1,11 +1,9 @@
 from entities.user import User
-from utils.database_handler import connect_database
-from utils.helpers import generate_password_hash, check_password, get_id
+from utils.helpers import generate_password_hash, get_id, get_type_id
 
 
 class UserRepository:
     def __init__(self):
-        #self.connection = connect_database(prod)
         pass
 
     def new(self, user):
@@ -18,15 +16,25 @@ class UserRepository:
             )
             saved_user = new_user.save()
             return saved_user
-        except Exception as e:
-            print(e)
+        except:  # tähän jos saisi tarkenteena mongoenginen not unique key exceptionin niin ois aika jeba
             return None
 
+    def update(self, user):
+        updated_user = user.save()
+        return updated_user
+
+    def remove(self, user):
+        if self.__get_id(user.id):
+            user.delete()
+            return True
+        return False
+
     def __get_all(self):
-        return User.objects
+        users = User.objects
+        return users
 
     def __get_id(self, search_term):
-        if type(search_term) == type(get_id()):
+        if isinstance(search_term, get_type_id()):
             return self.__get_all()(id=get_id(search_term)).first()
         return None
 
@@ -44,26 +52,10 @@ class UserRepository:
         return cases[mode]
 
     def count(self, mode="all", search_term=None):
-        return self.get(mode, search_term).count()
-
-    def login(self, username, password):
-        user = self.get("username", username)
-        try:
-            if check_password(bytes(password, 'utf-8'), bytes(user.password, 'utf-8')):
-                return user
-        except:
-            return None
-
-    def update(self, user):
-        updated_user = user.save()
-        return updated_user
-
-    def remove(self, user):
-        try:
-            user.delete()
-            return True
-        except:
-            return False
+        if mode == "all":
+            return self.get(mode, search_term).count()
+        else:
+            return 1 if self.get(mode, search_term) else 0
 
 
 user_repository = UserRepository()

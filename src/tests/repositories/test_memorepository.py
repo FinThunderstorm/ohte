@@ -13,33 +13,71 @@ class TestMemoRepository(unittest.TestCase):
         connect_database(prod=False)
         self.userrepo = user_repository
         self.user = self.userrepo.update(get_test_memo_user())
-        user_two = get_test_memo_user("6072d33e3a3c627a49901cd7", "memouser2")
-        self.user_two = self.userrepo.update(user_two)
+        self.user_two = self.userrepo.update(
+            get_test_memo_user("6072d33e3a3c627a49901cd7", "memouser2"))
         self.memorepo = memo_repository
         self.before = self.memorepo.count()
         self.memo = get_test_memo()
         self.saved_memo = self.memorepo.new(self.memo)
-        print('Is there our user?', self.userrepo.get('id', self.user.id))
 
     def tearDown(self):
         self.userrepo.remove(self.user)
         self.userrepo.remove(self.user_two)
         disconnect_database()
 
-    # count
-    def test_count_memos_works(self):
-        before = self.memorepo.count()
+    # count - add all modes to test scope
+    def test_count_defaults_to_all_memos(self):
+        for i in range(1, 4):
+            self.memorepo.new(get_test_memo())
+        count = self.memorepo.count()
+        memos = self.memorepo.get()
+        self.assertEqual(count, len(memos))
+
+    def test_count_all_memos_works(self):
+        before = self.memorepo.count("all")
         self.memorepo.new(get_test_memo())
-        after = self.memorepo.count()
+        after = self.memorepo.count("all")
         self.assertEqual(after, before + 1)
 
-    def test_count_with_multiple_added_works(self):
+    def test_count_all_with_multiple_added_works(self):
         before = self.memorepo.count()
         for i in range(1, 4):
             memo = get_test_memo(i)
             self.memorepo.new(memo)
         after = self.memorepo.count()
         self.assertEqual(after, before + 3)
+
+    def test_count_id_returns_only_one(self):
+        result = self.memorepo.count('id', self.saved_memo.id)
+        self.assertEqual(result, 1)
+
+    def test_count_not_valid_id_returns_zero(self):
+        result = self.memorepo.count('id', get_id())
+        self.assertEqual(result, 0)
+
+    def test_count_title_returns_right_amount(self):
+        for i in range(3):
+            memo = get_test_memo()
+            memo["title"] = "CountXing them all"
+            self.memorepo.new(memo)
+        result = self.memorepo.count("title", "countxing")
+        self.assertEqual(result, 3)
+
+    def test_count_content_returns_right_amount(self):
+        for i in range(3):
+            memo = get_test_memo()
+            memo["content"] = "CountYing them all"
+            self.memorepo.new(memo)
+        result = self.memorepo.count("content", "countying")
+        self.assertEqual(result, 3)
+
+    def test_count_author_returns_right_amount(self):
+        for i in range(3):
+            memo = get_test_memo()
+            memo["author"] = self.user_two
+            self.memorepo.new(memo)
+        result = self.memorepo.count("author", self.user_two)
+        self.assertEqual(result, 3)
 
     # new - ok
     def test_new_memo_returns_created_memo(self):

@@ -56,9 +56,10 @@ class MemoRepository:
         return cases[mode]
 
     def count(self, mode="all", search_term=None):
-        memos = self.get(mode, search_term)
-        result = memos.count()
-        return result
+        if mode == "id":
+            return 1 if self.get(mode, search_term) else 0
+        else:
+            return len(self.get(mode, search_term))
 
 
 memo_repository = MemoRepository()

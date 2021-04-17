@@ -14,18 +14,12 @@
 | 8.4-11.4 | 8h     | Refaktorointi ja ongelmien korjaamista                                         |
 | 13.4     | 2h (l) | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten |
 | 17.4     | 2h     | MemoRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1  |
+| 17.4     | 1h     | UserRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1  |
 | Yhteensä | 28h    |                                                                                |
 
 (l) = yhteensä laskettu tähän saakka
 
 ## Todo-lista
 
-- Refaktorointia repositoryille, siirrä servisiin puolelle - repository on vain tiedon tallennus eli funktiot get one, get all, update, remove - WIP
 - Uudelleen nimeä repositorien tiedostonimet ja refaktoroi muutos kaikiin vaikuttaviin tiedostoihin - WIP
-- Refaktoroi funktioiden nimet viisaammiksi repositoryistä, eli turhaan olevat tarkenteet new memo user jne.
-- Luo try-catch-logiikka kaikkeen tiedon siirtoon, jotta voidaan välttää kaatumiset.
-- selvitä objectidfield - toimiiko referenssaus kuten jäsässä; tuleeko userin mukana kuinka paljon kyseisestä memosta tietoa mukana.
 - tsekkaa testit kondikseen memoservicestä
-- muuta logiikka, että servicet ei palauta uutta oliota, vaan ainoastaan true-false onnistuiko toiminnallisuus vaiko eikö... tämän toteuttamista pitää selvittää...
-
-- laskarit
