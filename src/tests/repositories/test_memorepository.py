@@ -13,6 +13,8 @@ class TestMemoRepository(unittest.TestCase):
         connect_database(prod=False)
         self.userrepo = user_repository
         self.user = self.userrepo.update(get_test_memo_user())
+        user_two = get_test_memo_user("6072d33e3a3c627a49901cd7", "memouser2")
+        self.user_two = self.userrepo.update(user_two)
         self.memorepo = memo_repository
         self.before = self.memorepo.count()
         self.memo = get_test_memo()
@@ -21,6 +23,7 @@ class TestMemoRepository(unittest.TestCase):
 
     def tearDown(self):
         self.userrepo.remove(self.user)
+        self.userrepo.remove(self.user_two)
         disconnect_database()
 
     # count
@@ -119,6 +122,9 @@ class TestMemoRepository(unittest.TestCase):
         self.assertEqual(filtered_memo.content, saved_test_memo.content)
 
     def test_get_author_id_with_author_works(self):
+        user_two_memo = get_test_memo()
+        user_two_memo["author"] = self.user_two
+        self.memorepo.new(user_two_memo)
         filtered_memos = self.memorepo.get(
             "author", self.saved_memo.author)
         self.assertEqual(len(filtered_memos), 1)

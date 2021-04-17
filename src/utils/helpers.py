@@ -9,12 +9,12 @@ def get_time():
     return datetime.utcnow()
 
 
-def get_test_memo_user():
+def get_test_memo_user(uid="6072d33e3a3c627a49901ce8", username="memouser"):
     user = User(
-        id=get_id('6072d33e3a3c627a49901ce8'),
+        id=get_id(uid),
         firstname="Memo",
         lastname="User",
-        username="memouser",
+        username=username,
         password="$2b$12$1kt3hr6qYP4HPG5pdGZwHOW8QrYhZW79hpTbS2Ouw.oxr2pO9BYyG",
     )
     return user

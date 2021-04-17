@@ -1,6 +1,5 @@
 from entities.memo import Memo
-from utils.database_handler import connect_database
-from utils.helpers import get_time, get_id, get_test_memo_user, get_type_id, get_type_user
+from utils.helpers import get_time, get_type_id, get_type_user
 
 
 class MemoRepository:
@@ -22,23 +21,22 @@ class MemoRepository:
         return updated_memo
 
     def remove(self, memo):
-        try:
+        if self.__get_id(memo.id):
             memo.delete()
             return True
-        except:
-            return False
+        return False
 
     def __get_all(self):
-        all_memos = Memo.objects
+        all_memos = Memo.objects  # pylint: disable=no-member
         return all_memos
 
     def __get_id(self, search_term):
-        if type(search_term) == get_type_id():
+        if isinstance(search_term, get_type_id()):
             return self.__get_all()(id=search_term).first()
         return None
 
     def __get_author(self, search_term):
-        if type(search_term) == get_type_user():
+        if isinstance(search_term, get_type_user()):
             authors_memos = []
             for memo in self.__get_all():
                 if memo.author == search_term:

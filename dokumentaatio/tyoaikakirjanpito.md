@@ -12,8 +12,11 @@
 | 5.4      | 0,5h   | UserRepositoryn viimeistely                                                    |
 | 5.4      | 2h     | MemoService versio 1                                                           |
 | 8.4-11.4 | 8h     | Refaktorointi ja ongelmien korjaamista                                         |
-| 13.4     | 2h     | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten |
+| 13.4     | 2h (l) | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten |
+| 17.4     | 2h     | MemoRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1  |
 | Yhteensä | 28h    |                                                                                |
+
+(l) = yhteensä laskettu tähän saakka
 
 ## Todo-lista
 

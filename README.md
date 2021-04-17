@@ -42,3 +42,4 @@ poetry run invoke start
 ### Notes to myself:
 
 - Pymongon sertifikaatin validointiongelman ratkaisu: <https://stackoverflow.com/a/54511693>
+- Mainitse oikeassa dokkarissa, että MemoRepositoryn rivillä 30 on pylint disabloitu no-memberin osalta, pylint ei ymmärrä mongoenginen alaluokan omaavan tälläistä objects-arvoa, jonka Memon pääluokka Document tarjoaa.
