@@ -11,7 +11,7 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 ## "Tech stack"
 
 - Python 3.6 tuki
-  - tkinter -graafinen kirjasto
+  - PyQt6 -graafinen kirjasto
 - MongoDB -tietokanta taustalla
 
 ## Käyttöliittymähahmotelma

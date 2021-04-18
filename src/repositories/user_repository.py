@@ -58,7 +58,7 @@ class UserRepository:
         return cases[mode]
 
     def count(self, mode="all", search_term=None):
-        if mode == "id" or mode == "username":
+        if mode in ("id", "username"):
             return 1 if self.get(mode, search_term) else 0
         return self.get(mode, search_term).count()
 

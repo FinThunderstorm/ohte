@@ -1,4 +1,4 @@
-from repositories.UserRepository import user_repository as default_user_repository
+from repositories.user_repository import user_repository as default_user_repository
 from utils.helpers import check_password, generate_password_hash, get_type_user
 
 
@@ -38,7 +38,7 @@ class UserService:
         return result
 
     def count(self, mode="all", search_term=None):
-        if mode == "id" or mode == "username":
+        if mode in ("id", "username"):
             return 1 if self.user_repository.count(mode, search_term) else 0
         result = self.user_repository.count(mode, search_term)
         return result

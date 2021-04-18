@@ -2,7 +2,7 @@ import unittest
 from freezegun import freeze_time
 from utils.helpers import get_time, get_test_user, get_test_user_obj, get_id
 from utils.database_handler import connect_test_database, disconnect_database
-from repositories.UserRepository import user_repository
+from repositories.user_repository import user_repository
 
 
 @freeze_time(get_time())

@@ -38,6 +38,7 @@ poetry run invoke start
 - Ohjelman suorittaminen tapahtuu komennolla `poetry run invoke start`
 - Testien suorittaminen tapahtuu komennolla `poetry run invoke test`
 - Testikattavuuden luominen tapahtuu komennolla `poetry run invoke coverage-report`, joka löytyy htmlcov-kansiosta.
+- Koodin laadun tarkastaminen tapahtuu komennolla `poetry run invoke lint`
 
 ### Notes to myself:
 

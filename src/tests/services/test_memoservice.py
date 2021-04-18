@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from utils.database_handler import connect_test_database, disconnect_database
 from utils.helpers import get_time, get_time_timestamp, get_test_memo, get_id, get_test_memo_user, get_test_user_obj
 from services.memo_service import memo_service
-from repositories.UserRepository import user_repository
+from repositories.user_repository import user_repository
 
 
 @freeze_time(get_time())

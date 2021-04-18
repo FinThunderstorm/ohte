@@ -1,6 +1,6 @@
 from utils.helpers import get_time
-from repositories.UserRepository import user_repository as default_user_repository
-from repositories.MemoRepository import memo_repository as default_memo_repository
+from repositories.user_repository import user_repository as default_user_repository
+from repositories.memo_repository import memo_repository as default_memo_repository
 
 
 class MemoService:

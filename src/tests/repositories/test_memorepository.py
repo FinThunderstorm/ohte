@@ -2,8 +2,8 @@ import unittest
 from freezegun import freeze_time
 from utils.helpers import get_time, get_test_memo, get_test_memo_user, get_id, get_test_memo_obj
 from utils.database_handler import connect_test_database, disconnect_database
-from repositories.MemoRepository import memo_repository
-from repositories.UserRepository import user_repository
+from repositories.memo_repository import memo_repository
+from repositories.user_repository import user_repository
 
 
 @freeze_time(get_time())
