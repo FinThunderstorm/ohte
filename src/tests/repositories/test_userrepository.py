@@ -64,6 +64,7 @@ class TestUserRepository(unittest.TestCase):
         self.assertEqual(self.saved_user.username,
                          self.test_user["username"])
         self.assertIsNotNone(self.saved_user.memos)
+        self.assertEqual(self.saved_user.password[0:7], "$2b$12$")
 
     def test_new_user_with_existing_username_returns_none(self):
         duplicate_user = get_test_user(self.userrepo.count())

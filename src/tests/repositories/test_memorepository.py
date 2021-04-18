@@ -132,11 +132,12 @@ class TestMemoRepository(unittest.TestCase):
 
     def test_get_all_returns_list_of_memos(self):
         added_memos = []
+        added_memos.append(self.saved_memo)
         for i in range(1, 4):
             added_memos.append(self.memorepo.new(get_test_memo(i)))
         memos = self.memorepo.get("all")
-        for i in range(1, 4):
-            self.assertEqual(memos[i], added_memos[i-1])
+        for i in range(len(memos)):
+            self.assertEqual(memos[i], added_memos[i])
 
     def test_get_id_returns_memo_with_same_id(self):
         queried_memo = self.memorepo.get('id', self.saved_memo.id)

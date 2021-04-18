@@ -88,22 +88,24 @@ class TestMemoService(unittest.TestCase):
 
     # remove
     def test_remove_removes_memo_with_valid_id(self):
+        memo_id = self.saved_memo.id
         before = self.memo_service.count()
-        self.memo_service.create(self.author.id)
-        result = self.memo_service.remove(self.saved_memo.id)
+        result = self.memo_service.remove(memo_id)
         after = self.memo_service.count()
-        query = self.memo_service.get("id", self.saved_memo.id)
+        query = self.memo_service.get("id", memo_id)
         self.assertTrue(result)
         self.assertIsNone(query)
-        self.assertEqual(after, before)
+        self.assertEqual(after, before - 1)
 
     def test_remove_return_false_with_unvalid_id(self):
+        before = self.memo_service.count()
         result = self.memo_service.remove(get_id())
         after = self.memo_service.count()
         self.assertFalse(result)
-        self.assertEqual(after, self.before+1)
+        self.assertEqual(after, before)
 
     def test_removes_memo_from_user(self):
+        self.memo_service.create(self.author.id)
         author = self.userrepo.get("id", self.saved_memo.author.id)
         author_memos_count_before = self.memo_service.count(
             "author", author.id)
@@ -111,8 +113,8 @@ class TestMemoService(unittest.TestCase):
         author_memos_count_after = self.memo_service.count("author", author.id)
         author_after = self.userrepo.get("id", author.id)
         self.assertTrue(result)
-        self.assertEqual(author_memos_count_before, 1)
-        self.assertEqual(author_memos_count_after, 0)
+        self.assertEqual(author_memos_count_before, 2)
+        self.assertEqual(author_memos_count_after, 1)
         self.assertNotEqual(author_after.memos, author.memos)
 
     # get
@@ -126,11 +128,12 @@ class TestMemoService(unittest.TestCase):
 
     def test_get_all_works(self):
         added_memos = []
+        added_memos.append(self.saved_memo)
         for i in range(1, 4):
             added_memos.append(self.memo_service.create(self.author.id))
         memos = self.memo_service.get()
-        for i in range(1, 4):
-            self.assertEqual(memos[i], added_memos[i-1])
+        for i in range(len(memos)):
+            self.assertEqual(memos[i], added_memos[i])
 
     def test_get_id_returns_only_one(self):
         queried_memo = self.memo_service.get('id', self.saved_memo.id)

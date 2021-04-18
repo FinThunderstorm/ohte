@@ -1,7 +1,6 @@
 from mongoengine.queryset import NotUniqueError
-
 from entities.user import User
-from utils.helpers import generate_password_hash, get_id, get_type_id
+from utils.helpers import get_id, get_type_id, get_type_user
 
 
 class UserRepository:
@@ -14,7 +13,7 @@ class UserRepository:
                 firstname=user["firstname"],
                 lastname=user["lastname"],
                 username=user["username"],
-                password=generate_password_hash(user["password"]),
+                password=user["password"],
             )
             saved_user = new_user.save()
             return saved_user
@@ -22,10 +21,15 @@ class UserRepository:
             return None
 
     def update(self, user):
-        updated_user = user.save()
-        return updated_user
+        try:
+            updated_user = user.save()
+            return updated_user
+        except NotUniqueError:
+            return None
 
     def remove(self, user):
+        if not isinstance(user, get_type_user()):
+            return False
         if self.__get_id(user.id):
             user.delete()
             return True
@@ -54,9 +58,7 @@ class UserRepository:
         return cases[mode]
 
     def count(self, mode="all", search_term=None):
-        if mode == "id":
-            return 1 if self.get(mode, search_term) else 0
-        if mode == "username":
+        if mode == "id" or mode == "username":
             return 1 if self.get(mode, search_term) else 0
         return self.get(mode, search_term).count()
 
