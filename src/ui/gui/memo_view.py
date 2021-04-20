@@ -1,140 +1,13 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit
 
 
-class EditorToolbar:
-    def __init__(self, main):
-        self.layout = QHBoxLayout()
-        self.__handlers = main.editor_handlers
-        self.__main = main
-
-        self.__initialize()
-
-    def __initialize(self):
-        save_button = QPushButton('Save')
-        cancel_button = QPushButton('Cancel')
-        remove_button = QPushButton('Remove')
-        self.layout.addWidget(save_button)
-        self.layout.addWidget(cancel_button)
-        self.layout.addWidget(remove_button)
-        self.layout.addStretch()
-
-
-class ViewToolbar():
-    def __init__(self, main):
-        self.layout = QHBoxLayout()
-        self.__handlers = main.viewer_handlers
-        self.__main = main
-
-        self.__initialize()
-
-    def __initialize(self):
-        edit_button = QPushButton('Edit')
-        remove_button = QPushButton('Remove')
-        self.layout.addWidget(edit_button)
-        self.layout.addWidget(remove_button)
-        self.layout.addStretch()
-
-
-class Editor:
-    def __init__(self, main):
-        self.layout = QVBoxLayout()
-        self.__handlers = main.editor_handlers
-        self.__main = main
-
-        self.__toolbar = EditorToolbar(self.__main)
-
-        self.__memo = None
-        self.__objects = {}
-
-        self.__initialize()
-
-    def __initialize(self):
-        self.__objects["title_edit"] = QLineEdit()
-        self.__objects["info_label"] = QLabel()
-        self.__objects["content_edit"] = QPlainTextEdit()
-
-        self.layout.addWidget(self.__objects["title_edit"])
-        self.layout.addWidget(self.__objects["info_label"])
-        self.layout.addWidget(self.__objects["content_edit"])
-        self.layout.addLayout(self.__toolbar.layout)
-
-    def set_memo(self, memo):
-        self.__memo = memo
-
-        self.__objects["title_edit"].setText(self.__memo.title)
-        self.__objects["info_label"].setText('<p>'+self.__memo.date.strftime(
-            '%a %d.%m.%Y %H:%M')+' | '+self.__memo.author.firstname+" "+self.__memo.author.lastname+'</p>')
-        self.__objects["content_edit"].insertPlainText(self.__memo.content)
-
-
-class Viewer:
-    def __init__(self, main):
-        self.layout = QVBoxLayout()
-        self.__handlers = main.viewer_handlers
-        self.__main = main
-
-        self.__toolbar = ViewToolbar(self.__main)
-        self.__memo = None
-        self.__objects = {}
-
-        self.__initialize()
-
-    def __initialize(self):
-        self.__objects["title_label"] = QLabel()
-        self.__objects["info_label"] = QLabel()
-        self.__objects["content_label"] = QLabel()
-
-        self.layout.addWidget(self.__objects["title_label"])
-        self.layout.addWidget(self.__objects["info_label"])
-        self.layout.addWidget(self.__objects["content_label"])
-        self.layout.addStretch()
-        self.layout.addLayout(self.__toolbar.layout)
-
-    def set_memo(self, memo):
-        self.__memo = memo
-
-        print(memo)
-
-        self.__objects["title_label"].setText(
-            '<h1><u>'+self.__memo.title+'</u></h1>')
-        self.__objects["info_label"].setText('<p>'+self.__memo.date.strftime(
-            '%a %d.%m.%Y %H:%M')+' | '+self.__memo.author.firstname+" "+self.__memo.author.lastname+'</p>')
-        self.__objects["content_label"].setText(self.__memo.content)
-
-
-class MainMenu:
-    def __init__(self, main):
-        self.__main = main
-        self.layout = QVBoxLayout()
-        self.__handlers = main.main_menu_handlers
-
-        self.__memos = main.memos
-
-        self.__initialize()
-
-    def __initialize(self):
-        main_menu_button = QPushButton('Main menu')
-        self.layout.addWidget(main_menu_button)
-        self.layout.addSpacing(25)
-
-        for memo in self.__memos:
-            memo_button = QPushButton(memo.title)
-            memo_button.clicked.connect(
-                self.__handlers["show_memo"](self.__main, memo.id))
-            self.layout.addWidget(memo_button)
-
-        self.layout.addStretch()
-
-        new_memo_button = QPushButton('New memo')
-        self.layout.addWidget(new_memo_button)
-
-
 class MemoView(QWidget):
     def __init__(self, screen, memo_service, user):
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.memo_service = memo_service
         self.objects = {}
+        self.layouts = {}
 
         self.user = user
         self.memos = self.memo_service.get()
@@ -142,46 +15,138 @@ class MemoView(QWidget):
             'id', self.memos[2].id)
 
         self.main_menu_handlers = {
-            "show_memo": self.show_memo,
+            "show_memo": "toot",
         }
         self.editor_handlers = {
-            "edit_memo": self.edit_memo,
+            "edit_memo": "toot",
         }
         self.viewer_handlers = {}
 
         self.layout = QGridLayout()
         self.active_screen = 'viewer'
 
-        self.main_menu = MainMenu(self)
-        self.editor = Editor(self)
-        self.viewer = Viewer(self)
+        self.__viewer_memo = None
+        self.__editor_memo = None
 
         self.__initialize()
 
     def __initialize(self):
+        self.__initialize_mainmenu()
+        self.__initialize_viewer()
+        self.__initialize_editor()
+
         self.setWindowTitle('Muistio')
         # self.setGeometry(2760, 1360, 1080, 800) # used for dev purposes only
         self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
 
-        self.layout.addLayout(self.main_menu.layout, 0, 0)
-        #self.__layout.addLayout(self.__editor.layout, 0, 1)
-        self.layout.addLayout(self.viewer.layout, 0, 1)
+        self.layout.addLayout(self.layouts["mainmenu"], 0, 0)
+        #self.layout.addLayout(self.layouts["editor"], 0, 1)
+        self.layout.addLayout(self.layouts["viewer"], 0, 1)
 
         self.setLayout(self.layout)
 
-    def show_memo(self, main, memo_id):
-        main.viewer.set_memo(main.memo_service.get('id', memo_id))
-        if main.active_screen == "editor":
-            # tee varmistus dialog ikkuna, et ooksä tosissas vaihtamassa
-            main.layout.removeItem(self.viewer.layout)
-            main.layout.addLayout(self.editor.layout, 0, 1)
-
-    def edit_memo(self, main, memo_id):
-        main.editor.set_memo(main.memo_service.get('id', memo_id))
-        main.layout.removeItem(main.viewer.layout)
-        main.layout.addLayout(main.editor.layout, 0, 1)
-
     def run(self):
         self.show()
-        self.viewer.set_memo(self.testing_memo)
-        self.editor.set_memo(self.testing_memo)
+        self.__set_viewer_memo(self.testing_memo)
+        self.__set_editor_memo(self.testing_memo)
+
+    def __initialize_mainmenu(self):
+        self.objects["mainmenu"] = {}
+        self.layouts["mainmenu"] = QVBoxLayout()
+        main_menu_button = QPushButton('Main menu')
+        self.objects["mainmenu"]["mainmenu_button"] = main_menu_button
+        self.layouts["mainmenu"].addWidget(main_menu_button)
+        self.layouts["mainmenu"].addSpacing(25)
+
+        for memo in self.memos:
+            memo_button = QPushButton(memo.title)
+            # memo_button.clicked.connect(
+            #    self.__handlers["show_memo"](self.__main, memo.id))
+            self.objects["mainmenu"][memo.id] = memo_button
+            self.layouts["mainmenu"].addWidget(memo_button)
+
+        self.layouts["mainmenu"].addStretch()
+
+        new_memo_button = QPushButton('New memo')
+        self.objects["mainmenu"]["new_memo_button"] = new_memo_button
+        self.layouts["mainmenu"].addWidget(new_memo_button)
+
+    def __initialize_viewer(self):
+        self.objects["viewer"] = {}
+        self.layouts["viewer"] = QVBoxLayout()
+
+        self.__initialize_viewer_toolbar()
+        self.__viewer_memo = None
+
+        self.objects["viewer"]["title_label"] = QLabel()
+        self.objects["viewer"]["info_label"] = QLabel()
+        self.objects["viewer"]["content_label"] = QLabel()
+
+        self.layouts["viewer"].addWidget(self.objects["viewer"]["title_label"])
+        self.layouts["viewer"].addWidget(self.objects["viewer"]["info_label"])
+        self.layouts["viewer"].addWidget(
+            self.objects["viewer"]["content_label"])
+        self.layouts["viewer"].addStretch()
+        self.layouts["viewer"].addLayout(self.layouts["viewer_toolbar"])
+
+    def __set_viewer_memo(self, memo):
+        self.__viewer_memo = memo
+
+        self.objects["viewer"]["title_label"].setText(
+            '<h1><u>'+self.__viewer_memo.title+'</u></h1>')
+        self.objects["viewer"]["info_label"].setText('<p>'+self.__viewer_memo.date.strftime(
+            '%a %d.%m.%Y %H:%M')+' | '+self.__viewer_memo.author.firstname+" "+self.__viewer_memo.author.lastname+'</p>')
+        self.objects["viewer"]["content_label"].setText(
+            self.__viewer_memo.content)
+
+    def __initialize_editor(self):
+        self.objects["editor"] = {}
+        self.layouts["editor"] = QVBoxLayout()
+
+        self.__initialize_editor_toolbar()
+
+        self.objects["editor"]["title_edit"] = QLineEdit()
+        self.objects["editor"]["info_label"] = QLabel()
+        self.objects["editor"]["content_edit"] = QPlainTextEdit()
+
+        self.layouts["editor"].addWidget(self.objects["editor"]["title_edit"])
+        self.layouts["editor"].addWidget(self.objects["editor"]["info_label"])
+        self.layouts["editor"].addWidget(
+            self.objects["editor"]["content_edit"])
+        self.layouts["editor"].addLayout(self.layouts["editor_toolbar"])
+
+    def __set_editor_memo(self, memo):
+        self.__editor_memo = memo
+
+        self.objects["editor"]["title_edit"].setText(self.__editor_memo.title)
+        self.objects["editor"]["info_label"].setText('<p>'+self.__editor_memo.date.strftime(
+            '%a %d.%m.%Y %H:%M')+' | '+self.__editor_memo.author.firstname+" "+self.__editor_memo.author.lastname+'</p>')
+        self.objects["editor"]["content_edit"].insertPlainText(
+            self.__editor_memo.content)
+
+    def __initialize_editor_toolbar(self):
+        self.objects["editor_toolbar"] = {}
+        self.layouts["editor_toolbar"] = QHBoxLayout()
+
+        self.objects["editor_toolbar"]["save_button"] = QPushButton('Save')
+        self.objects["editor_toolbar"]["cancel_button"] = QPushButton('Cancel')
+        self.objects["editor_toolbar"]["remove_button"] = QPushButton('Remove')
+        self.layouts["editor_toolbar"].addWidget(
+            self.objects["editor_toolbar"]["save_button"])
+        self.layouts["editor_toolbar"].addWidget(
+            self.objects["editor_toolbar"]["cancel_button"])
+        self.layouts["editor_toolbar"].addWidget(
+            self.objects["editor_toolbar"]["remove_button"])
+        self.layouts["editor_toolbar"].addStretch()
+
+    def __initialize_viewer_toolbar(self):
+        self.objects["viewer_toolbar"] = {}
+        self.layouts["viewer_toolbar"] = QHBoxLayout()
+
+        self.objects["viewer_toolbar"]["edit_button"] = QPushButton('Edit')
+        self.objects["viewer_toolbar"]["remove_button"] = QPushButton('Remove')
+        self.layouts["viewer_toolbar"].addWidget(
+            self.objects["viewer_toolbar"]["edit_button"])
+        self.layouts["viewer_toolbar"].addWidget(
+            self.objects["viewer_toolbar"]["remove_button"])
+        self.layouts["viewer_toolbar"].addStretch()
