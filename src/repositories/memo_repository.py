@@ -1,5 +1,5 @@
 from entities.memo import Memo
-from utils.helpers import get_time, get_type_id, get_type_user, get_type_memo
+from utils.helpers import get_time, get_id, get_type_id, get_type_user, get_type_memo
 
 
 class MemoRepository:

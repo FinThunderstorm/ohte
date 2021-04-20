@@ -19,11 +19,10 @@
 | 17.4     | 2h     | MemoServicen testit kuntoon ja sovelluslogiikan v1                                    |
 | 17.4     | 3h     | UserServicen versio 1 ja testit                                                       |
 | 18.4     | 1h     | Tietokannan yhdistämisen testien räpeltäminen, pytest-socket ei saanut estettyä - WIP |
-| 18.4     | Xh     | Graafisen käyttöliittymän rakentamisen aloittaminen,                                  |
+| 18.4     | 5,5h   | Graafisen käyttöliittymän rakentamisen aloittaminen,                                  |
 |          |        | PyQt5 toteaminen sopivammaksi GUI-kirjastoksi ajatellen tulevia kehityskohteita       |
 | Yhteensä | 28h    |                                                                                       |
 
-1,5h - 18.4
 (l) = yhteensä laskettu tähän saakka
 
 ## Todo-lista
