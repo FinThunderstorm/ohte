@@ -11,7 +11,7 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 ## "Tech stack"
 
 - Python 3.6 tuki
-  - PyQt6 -graafinen kirjasto
+  - PyQt5 -graafinen kirjasto
 - MongoDB -tietokanta taustalla
 
 ## Käyttöliittymähahmotelma
@@ -22,15 +22,16 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 
 ### Käyttäjänhallinta
 
-- Käyttäjä voi kirjautua järjestelmään
-- Käyttäjä voi luoda itselleen tunnuksen järjestelmään
+- Käyttäjä voi kirjautua järjestelmään (sovelluslogiikka tehty, GUI puuttuu)
+- Käyttäjä voi luoda itselleen tunnuksen järjestelmään (sovelluslogiikka tehty, GUI puuttuu)
 - Käyttäjä voi kirjautua ulos järjestelmästä
 
 ### Muistion toiminnallisuudet
 
-- Käyttäjä voi luoda muistion
-- Käyttäjä voi muokata muistiota
-- Käyttäjä voi poistaa muistion
+- Käyttäjä voi lukea muistioita (tehty)
+- Käyttäjä voi luoda muistion (tehty)
+- Käyttäjä voi muokata muistiota (tehty)
+- Käyttäjä voi poistaa muistion (sovelluslogiikka tehty, GUI puuttuu)
 
 ## Jatkokehittämismahdollisuudet
 

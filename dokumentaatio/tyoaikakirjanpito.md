@@ -21,6 +21,7 @@
 | 18.4     | 1h     | Tietokannan yhdistämisen testien räpeltäminen, pytest-socket ei saanut estettyä - WIP |
 | 18.4     | 5,5h   | Graafisen käyttöliittymän rakentamisen aloittaminen,                                  |
 |          |        | PyQt5 toteaminen sopivammaksi GUI-kirjastoksi ajatellen tulevia kehityskohteita       |
+| 20.4     | 3h     | Muistioiden vaihtaminen, päivittäminen graafiseen käyttöliittymään                    |
 | Yhteensä | 28h    |                                                                                       |
 
 (l) = yhteensä laskettu tähän saakka
