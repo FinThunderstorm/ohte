@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit
+from functools import partial
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit, QFrame
 
 
 class MemoView(QWidget):
@@ -8,6 +9,7 @@ class MemoView(QWidget):
         self.memo_service = memo_service
         self.objects = {}
         self.layouts = {}
+        self.frames = {}
 
         self.user = user
         self.memos = self.memo_service.get()
@@ -23,7 +25,7 @@ class MemoView(QWidget):
         self.viewer_handlers = {}
 
         self.layout = QGridLayout()
-        self.active_screen = 'viewer'
+        self.__active_screen = 'editor'
 
         self.__viewer_memo = None
         self.__editor_memo = None
@@ -31,9 +33,9 @@ class MemoView(QWidget):
         self.__initialize()
 
     def __initialize(self):
-        self.__initialize_mainmenu()
         self.__initialize_viewer()
         self.__initialize_editor()
+        self.__initialize_mainmenu()
 
         self.setWindowTitle('Muistio')
         # self.setGeometry(2760, 1360, 1080, 800) # used for dev purposes only
@@ -41,7 +43,9 @@ class MemoView(QWidget):
 
         self.layout.addLayout(self.layouts["mainmenu"], 0, 0)
         #self.layout.addLayout(self.layouts["editor"], 0, 1)
-        self.layout.addLayout(self.layouts["viewer"], 0, 1)
+        self.layout.addWidget(self.frames["editor"], 0, 1)
+        self.layout.addWidget(self.frames["viewer"], 0, 1)
+        #self.layout.addLayout(self.layouts["viewer"], 0, 1)
 
         self.setLayout(self.layout)
 
@@ -60,8 +64,7 @@ class MemoView(QWidget):
 
         for memo in self.memos:
             memo_button = QPushButton(memo.title)
-            # memo_button.clicked.connect(
-            #    self.__handlers["show_memo"](self.__main, memo.id))
+            memo_button.clicked.connect(partial(self.__show_memo, memo.id))
             self.objects["mainmenu"][memo.id] = memo_button
             self.layouts["mainmenu"].addWidget(memo_button)
 
@@ -72,8 +75,11 @@ class MemoView(QWidget):
         self.layouts["mainmenu"].addWidget(new_memo_button)
 
     def __initialize_viewer(self):
+        self.frames["viewer"] = QFrame()
         self.objects["viewer"] = {}
         self.layouts["viewer"] = QVBoxLayout()
+        self.frames["viewer"].setLayout(self.layouts["viewer"])
+        self.frames["viewer"].hide()
 
         self.__initialize_viewer_toolbar()
         self.__viewer_memo = None
@@ -102,6 +108,8 @@ class MemoView(QWidget):
     def __initialize_editor(self):
         self.objects["editor"] = {}
         self.layouts["editor"] = QVBoxLayout()
+        self.frames["editor"] = QFrame()
+        self.frames["editor"].setLayout(self.layouts["editor"])
 
         self.__initialize_editor_toolbar()
 
@@ -150,3 +158,12 @@ class MemoView(QWidget):
         self.layouts["viewer_toolbar"].addWidget(
             self.objects["viewer_toolbar"]["remove_button"])
         self.layouts["viewer_toolbar"].addStretch()
+
+    def __show_memo(self, memo_id):
+        if self.__active_screen == "editor":
+            self.frames["editor"].hide()
+            self.frames["viewer"].show()
+            self.__active_screen = "viewer"
+        print(memo_id)
+        memo = self.memo_service.get("id", memo_id)
+        self.__set_viewer_memo(memo)
