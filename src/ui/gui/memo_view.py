@@ -46,10 +46,10 @@ class MemoView(QWidget):
         self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
 
         self.layout.addLayout(self.layouts["mainmenu"], 0, 0)
-        #self.layout.addLayout(self.layouts["editor"], 0, 1)
+        # self.layout.addLayout(self.layouts["editor"], 0, 1)
         self.layout.addWidget(self.frames["editor"], 0, 1)
         self.layout.addWidget(self.frames["viewer"], 0, 1)
-        #self.layout.addLayout(self.layouts["viewer"], 0, 1)
+        # self.layout.addLayout(self.layouts["viewer"], 0, 1)
 
         self.setLayout(self.layout)
 
@@ -188,14 +188,15 @@ class MemoView(QWidget):
             self.__active_screen = "viewer"
         memo = self.memo_service.get("id", memo_id)
         self.__set_viewer_memo(memo)
+        if not self.__editor_memo:
+            self.__set_editor_memo(memo)
 
     def __edit_memo(self, memo_id):
         if self.__active_screen == "viewer":
             self.frames["viewer"].hide()
             self.frames["editor"].show()
             self.__active_screen = "editor"
-        memo = self.memo_service.get("id", memo_id)
-        self.__set_editor_memo(memo)
+        self.__set_editor_memo(self.__viewer_memo)
 
     def __save_memo(self):
         title = self.objects["editor"]["title_edit"].text()
@@ -281,16 +282,14 @@ class MemoView(QWidget):
         self.frames["remove_memo"].done(1)
 
     def __handle_remove_memo(self):
-        memo_to_be_removed = self.__editor_memo
-        if self.__active_screen == "viewer":
-            memo_to_be_removed = self.__viewer_memo
+        memo_to_be_removed = self.__viewer_memo
         result = self.memo_service.remove(memo_to_be_removed.id)
         if result:
             self.objects["mainmenu_memos"][memo_to_be_removed.id].deleteLater()
             # self.__viewer_memo = None
-            # self.objects["viewer"]["title_label"].setText('')
-            # self.objects["viewer"]["info_label"].setText('')
-            # self.objects["viewer"]["content_label"].setText('')
+            self.objects["viewer"]["title_label"].setText('')
+            self.objects["viewer"]["info_label"].setText('')
+            self.objects["viewer"]["content_label"].setText('')
             # if self.__active_screen == "editor":
             #     self.__editor_memo = None
             #     self.frames["editor"].hide()
