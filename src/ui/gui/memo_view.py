@@ -1,6 +1,6 @@
 from functools import partial
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit, QFrame
-from utils.helpers import get_time
+from utils.helpers import get_empty_memo
 
 
 class MemoView(QWidget):
@@ -14,8 +14,11 @@ class MemoView(QWidget):
 
         self.user = user
         self.memos = self.memo_service.get()
-        self.testing_memo = self.memo_service.get(
-            'id', self.memos[2].id)
+        if len(self.memos) > 0:
+            self.testing_memo = self.memo_service.get(
+                'id', self.memos[0].id)
+        else:
+            self.testing_memo = get_empty_memo()
 
         self.main_menu_handlers = {
             "show_memo": "toot",
@@ -28,8 +31,8 @@ class MemoView(QWidget):
         self.layout = QGridLayout()
         self.__active_screen = 'viewer'
 
-        self.__viewer_memo = None
-        self.__editor_memo = None
+        self.__viewer_memo = None if len(self.memos) > 0 else get_empty_memo()
+        self.__editor_memo = None if len(self.memos) > 0 else get_empty_memo()
 
         self.__initialize()
 
@@ -151,13 +154,15 @@ class MemoView(QWidget):
 
         self.objects["editor_toolbar"]["save_button"].clicked.connect(
             self.__save_memo)
+        self.objects["editor_toolbar"]["remove_button"].clicked.connect(
+            self.__remove_memo)
 
         self.layouts["editor_toolbar"].addWidget(
             self.objects["editor_toolbar"]["save_button"])
         self.layouts["editor_toolbar"].addWidget(
             self.objects["editor_toolbar"]["cancel_button"])
-        self.layouts["editor_toolbar"].addWidget(
-            self.objects["editor_toolbar"]["remove_button"])
+        # self.layouts["editor_toolbar"].addWidget(
+        #     self.objects["editor_toolbar"]["remove_button"])
         self.layouts["editor_toolbar"].addStretch()
 
     def __initialize_viewer_toolbar(self):
@@ -166,6 +171,9 @@ class MemoView(QWidget):
 
         self.objects["viewer_toolbar"]["edit_button"] = QPushButton('Edit')
         self.objects["viewer_toolbar"]["remove_button"] = QPushButton('Remove')
+
+        self.objects["viewer_toolbar"]["remove_button"].clicked.connect(
+            self.__remove_memo)
 
         self.layouts["viewer_toolbar"].addWidget(
             self.objects["viewer_toolbar"]["edit_button"])
@@ -202,7 +210,6 @@ class MemoView(QWidget):
 
     def __handle_new_memo(self):
         title = self.objects["new_memo"]["title_edit"].text()
-        print('title >', title)
         new_memo = self.memo_service.create(self.user.id, title)
         if new_memo:
             self.__set_editor_memo(new_memo)
@@ -239,5 +246,55 @@ class MemoView(QWidget):
 
         self.frames["new_memo"].exec_()
 
-    def __remove_memo_viewer(self):
-        pass
+    def __remove_memo(self):
+        memo_to_be_removed = self.__editor_memo
+        if self.__active_screen == "viewer":
+            memo_to_be_removed = self.__viewer_memo
+
+        self.frames["remove_memo"] = QDialog()
+        self.objects["remove_memo"] = {}
+        self.frames["remove_memo"].setWindowTitle("Are you sure?")
+
+        self.layouts["remove_memo"] = QVBoxLayout()
+        self.objects["remove_memo"]["info_label"] = QLabel(
+            "Confirm removal of memo '"+memo_to_be_removed.title+"'")
+        self.layouts["remove_memo"].addWidget(
+            self.objects["remove_memo"]["info_label"])
+
+        self.objects["remove_memo"]["cancel_button"] = QPushButton('Cancel')
+        self.objects["remove_memo"]["cancel_button"].clicked.connect(
+            self.__handle_remove_cancel)
+        self.layouts["remove_memo"].addWidget(
+            self.objects["remove_memo"]["cancel_button"])
+
+        self.objects["remove_memo"]["confirm_button"] = QPushButton('Confirm')
+        self.objects["remove_memo"]["confirm_button"].clicked.connect(
+            self.__handle_remove_memo)
+        self.layouts["remove_memo"].addWidget(
+            self.objects["remove_memo"]["confirm_button"])
+
+        self.frames["remove_memo"].setLayout(self.layouts["remove_memo"])
+
+        self.frames["remove_memo"].exec_()
+
+    def __handle_remove_cancel(self):
+        self.frames["remove_memo"].done(1)
+
+    def __handle_remove_memo(self):
+        memo_to_be_removed = self.__editor_memo
+        if self.__active_screen == "viewer":
+            memo_to_be_removed = self.__viewer_memo
+        result = self.memo_service.remove(memo_to_be_removed.id)
+        if result:
+            self.objects["mainmenu_memos"][memo_to_be_removed.id].deleteLater()
+            # self.__viewer_memo = None
+            # self.objects["viewer"]["title_label"].setText('')
+            # self.objects["viewer"]["info_label"].setText('')
+            # self.objects["viewer"]["content_label"].setText('')
+            # if self.__active_screen == "editor":
+            #     self.__editor_memo = None
+            #     self.frames["editor"].hide()
+            #     self.frames["viewer"].show()
+            #     self.__active_screen = "viewer"
+
+        self.frames["remove_memo"].done(1)

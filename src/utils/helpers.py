@@ -86,3 +86,12 @@ def check_password(password, hashed_password):
 
 def get_id(sid=None):
     return ObjectId(sid)
+
+
+def get_empty_memo():
+    return Memo(
+        author=get_test_memo_user(),
+        title="",
+        content="",
+        date=get_time(),
+    )

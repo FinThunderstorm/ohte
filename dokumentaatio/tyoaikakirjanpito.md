@@ -12,7 +12,7 @@
 | 5.4      | 0,5h   | UserRepositoryn viimeistely                                                           |
 | 5.4      | 2h     | MemoService versio 1                                                                  |
 | 8.4-11.4 | 8h     | Refaktorointi ja ongelmien korjaamista                                                |
-| 13.4     | 2h (l) | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten        |
+| 13.4     | 2h     | Viikon 3 palautuksen valmistelu, alkeellinen tekstikäyttöliittymä demoa varten        |
 | 17.4     | 2h     | MemoRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1         |
 | 17.4     | 1h     | UserRepositoryn testien viimeistely ja kokonaisuuden saattaminen valmiiksi v1         |
 | 17.4     | 0,5h   | Aiemman tekstikäyttöliittymän eristäminen tulevan GUI:n tieltä omaksi luokaksi        |
@@ -21,10 +21,8 @@
 | 18.4     | 1h     | Tietokannan yhdistämisen testien räpeltäminen, pytest-socket ei saanut estettyä - WIP |
 | 18.4     | 5,5h   | Graafisen käyttöliittymän rakentamisen aloittaminen,                                  |
 |          |        | PyQt5 toteaminen sopivammaksi GUI-kirjastoksi ajatellen tulevia kehityskohteita       |
-| 20.4     | 3h     | Muistioiden vaihtaminen, päivittäminen graafiseen käyttöliittymään                    |
-| Yhteensä | 28h    |                                                                                       |
-
-(l) = yhteensä laskettu tähän saakka
+| 20.4     | 4h     | Muistioiden toiminnallisuudet alkeellisesti valmiiksi graafiseen käyttöliittymään     |
+| Yhteensä | 47h    |                                                                                       |
 
 ## Todo-lista
 
