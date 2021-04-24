@@ -38,7 +38,8 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seuraavien toiminnallisuuksien pohjalta.
 
 - Markdown-muotoilulle tuki
-- Muistioiden lajitteleminen kansioittain
+- Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
+- Lajittelumahdollisuudet
 - Median upottaminen
 - Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja
 - Asetukset

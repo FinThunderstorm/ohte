@@ -20,6 +20,7 @@ freezegun = "^1.1.0"
 mongomock = "^3.22.1"
 pytest = "^6.2.3"
 pytest-socket = "^0.4.0"
+coverage = "^5.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
