@@ -21,7 +21,12 @@ class LoginView(QFrame):
 
         self.setWindowTitle('Muistio')
         self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
-        # self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
+        width = 400
+        height = 600
+        width_pos = self.__screen_width//2 - width//2
+        height_pos = self.__screen_height//2 - height//2
+
+        # self.setGeometry(width_pos, height_pos, width, height)
 
         self.layout.addWidget(self.frames[0]["login"])
         self.layout.addWidget(self.frames[0]["create_new_user"])
@@ -39,7 +44,7 @@ class LoginView(QFrame):
         self.objects[0]["login"]["app_name_label"] = QLabel(
             "<h1>muistio</h1>")
         self.layouts[0]["login"].addWidget(
-            self.objects[0]["login"]["app_name_label"], 0, 0)
+            self.objects[0]["login"]["app_name_label"], 0, 0, 1, 2)
 
         self.objects[0]["login"]["username_label"] = QLabel("username")
         self.layouts[0]["login"].addWidget(
@@ -64,12 +69,20 @@ class LoginView(QFrame):
         self.objects[0]["login"]["login_button"] = QPushButton("login")
         self.objects[0]["login"]["login_button"].clicked.connect(self.__login)
         self.layouts[0]["login"].addWidget(
-            self.objects[0]["login"]["login_button"], 3, 0)
+            self.objects[0]["login"]["login_button"], 3, 0, 1, 2)
 
         self.objects[0]["login"]["create_button"] = QPushButton(
             "create new user")
+        self.objects[0]["login"]["create_button"].clicked.connect(
+            self.__show_create_new_user)
         self.layouts[0]["login"].addWidget(
-            self.objects[0]["login"]["create_button"], 4, 0)
+            self.objects[0]["login"]["create_button"], 4, 0, 1, 2)
+
+    def __show_create_new_user(self):
+        self.frames[0]["login"].hide()
+        self.frames[0]["create_new_user"].show()
+        self.objects[0]["login"]["username_edit"].setText('')
+        self.objects[0]["login"]["password_edit"].setText('')
 
     def __login(self):
         username = self.objects[0]["login"]["username_edit"].text()
@@ -119,7 +132,7 @@ class LoginView(QFrame):
         self.objects[0]["create_new_user"]["page_title_label"] = QLabel(
             "<h1>create</h1><h2>new user</h2>")
         self.layouts[0]["create_new_user"].addWidget(
-            self.objects[0]["create_new_user"]["page_title_label"], 0, 0)
+            self.objects[0]["create_new_user"]["page_title_label"], 0, 0, 1, 2)
 
         self.objects[0]["create_new_user"]["firstname_label"] = QLabel(
             "firstname")
@@ -161,24 +174,19 @@ class LoginView(QFrame):
         self.layouts[0]["create_new_user"].addWidget(
             self.objects[0]["create_new_user"]["password_edit"], 4, 1)
 
-        self.layouts[0]["create_new_user_buttons"] = QHBoxLayout()
-
         self.objects[0]["create_new_user"]["create_new_user_button"] = QPushButton(
-            "Create new user")
+            "Create")
         self.objects[0]["create_new_user"]["create_new_user_button"].clicked.connect(
             self.__create_new_user)
-        self.layouts[0]["create_new_user_buttons"].addWidget(
-            self.objects[0]["create_new_user"]["create_new_user_button"])
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["create_new_user_button"], 5, 0, 1, 2)
 
         self.objects[0]["create_new_user"]["cancel_button"] = QPushButton(
-            "Cancel")
+            "Back to login")
         self.objects[0]["create_new_user"]["cancel_button"].clicked.connect(
-            self.__create_new_user)
-        self.layouts[0]["create_new_user_buttons"].addWidget(
-            self.objects[0]["create_new_user"]["cancel_button"])
-
-        self.layouts[0]["create_new_user"].addLayout(
-            self.layouts[0]["create_new_user_buttons"], 5, 0)
+            self.__handle_create_cancel)
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["cancel_button"], 6, 0, 1, 2)
 
     def __create_new_user(self):
         firstname = self.objects[0]["create_new_user"]["firstname_edit"].text()
@@ -188,10 +196,17 @@ class LoginView(QFrame):
 
         result = self.user_service.create(
             firstname, lastname, username, password)
-        print(result)
         if result:
             self.frames[0]["create_new_user"].hide()
             self.frames[0]["login"].show()
+        self.objects[0]["create_new_user"]["firstname_edit"].setText('')
+        self.objects[0]["create_new_user"]["lastname_edit"].setText('')
+        self.objects[0]["create_new_user"]["username_edit"].setText('')
+        self.objects[0]["create_new_user"]["password_edit"].setText('')
+
+    def __handle_create_cancel(self):
+        self.frames[0]["create_new_user"].hide()
+        self.frames[0]["login"].show()
         self.objects[0]["create_new_user"]["firstname_edit"].setText('')
         self.objects[0]["create_new_user"]["lastname_edit"].setText('')
         self.objects[0]["create_new_user"]["username_edit"].setText('')
