@@ -53,6 +53,7 @@ class MemoView(QFrame):
 
     def run(self):
         self.show()
+        print(self.user[0].firstname, self.user[0].lastname)
         self.__set_viewer_memo(self.testing_memo)
         self.__set_editor_memo(self.testing_memo)
 

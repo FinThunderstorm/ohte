@@ -30,8 +30,6 @@ class GUI:
         self.__memo_view.initialize()
         self.__login_view.initialize()
 
-        print(self.frames[0]["memoview"])
-
     def start(self):
         # self.__memo_view.run()
         self.__login_view.show()

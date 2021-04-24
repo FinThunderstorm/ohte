@@ -16,19 +16,17 @@ class LoginView(QFrame):
         self.__user = user
 
     def initialize(self):
-        for key in self.objects[0].keys():
-            print(key)
         self.__initialize_login()
+        self.__initialize_create_user()
 
         self.setWindowTitle('Muistio')
         self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
-        #self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
+        # self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
 
         self.layout.addWidget(self.frames[0]["login"])
-        # # self.layout.addLayout(self.layouts[0]["editor"], 0, 1)
-        # self.layout.addWidget(self.frames[0]["editor"], 0, 1)
-        # self.layout.addWidget(self.frames[0]["viewer"], 0, 1)
-        # # self.layout.addLayout(self.layouts[0]["viewer"], 0, 1)
+        self.layout.addWidget(self.frames[0]["create_new_user"])
+
+        self.frames[0]["login"].hide()
 
         self.setLayout(self.layout)
 
@@ -110,6 +108,94 @@ class LoginView(QFrame):
 
     def __handle_ok(self):
         self.frames[0]["login_error"].done(1)
+
+    def __initialize_create_user(self):
+        self.frames[0]["create_new_user"] = QFrame()
+        self.objects[0]["create_new_user"] = {}
+        self.layouts[0]["create_new_user"] = QGridLayout()
+        self.frames[0]["create_new_user"].setLayout(
+            self.layouts[0]["create_new_user"])
+
+        self.objects[0]["create_new_user"]["page_title_label"] = QLabel(
+            "<h1>create</h1><h2>new user</h2>")
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["page_title_label"], 0, 0)
+
+        self.objects[0]["create_new_user"]["firstname_label"] = QLabel(
+            "firstname")
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["firstname_label"], 1, 0)
+
+        self.objects[0]["create_new_user"]["firstname_edit"] = QLineEdit()
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["firstname_edit"], 1, 1)
+
+        self.objects[0]["create_new_user"]["lastname_label"] = QLabel(
+            "lastname")
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["lastname_label"], 2, 0)
+
+        self.objects[0]["create_new_user"]["lastname_edit"] = QLineEdit()
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["lastname_edit"], 2, 1)
+
+        self.objects[0]["create_new_user"]["username_label"] = QLabel(
+            "username")
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["username_label"], 3, 0)
+
+        self.objects[0]["create_new_user"]["username_edit"] = QLineEdit()
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["username_edit"], 3, 1)
+
+        self.objects[0]["create_new_user"]["password_label"] = QLabel(
+            "password")
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["password_label"], 4, 0)
+
+        self.objects[0]["create_new_user"]["password_edit"] = QLineEdit()
+        self.objects[0]["create_new_user"]["password_edit"].setEchoMode(
+            QLineEdit.Password)
+        self.objects[0]["create_new_user"]["password_edit"].returnPressed.connect(
+            self.__create_new_user)
+        self.layouts[0]["create_new_user"].addWidget(
+            self.objects[0]["create_new_user"]["password_edit"], 4, 1)
+
+        self.layouts[0]["create_new_user_buttons"] = QHBoxLayout()
+
+        self.objects[0]["create_new_user"]["create_new_user_button"] = QPushButton(
+            "Create new user")
+        self.objects[0]["create_new_user"]["create_new_user_button"].clicked.connect(
+            self.__create_new_user)
+        self.layouts[0]["create_new_user_buttons"].addWidget(
+            self.objects[0]["create_new_user"]["create_new_user_button"])
+
+        self.objects[0]["create_new_user"]["cancel_button"] = QPushButton(
+            "Cancel")
+        self.objects[0]["create_new_user"]["cancel_button"].clicked.connect(
+            self.__create_new_user)
+        self.layouts[0]["create_new_user_buttons"].addWidget(
+            self.objects[0]["create_new_user"]["cancel_button"])
+
+        self.layouts[0]["create_new_user"].addLayout(
+            self.layouts[0]["create_new_user_buttons"], 5, 0)
+
+    def __create_new_user(self):
+        firstname = self.objects[0]["create_new_user"]["firstname_edit"].text()
+        lastname = self.objects[0]["create_new_user"]["lastname_edit"].text()
+        username = self.objects[0]["create_new_user"]["username_edit"].text()
+        password = self.objects[0]["create_new_user"]["password_edit"].text()
+
+        result = self.user_service.create(
+            firstname, lastname, username, password)
+        print(result)
+        if result:
+            self.frames[0]["create_new_user"].hide()
+            self.frames[0]["login"].show()
+        self.objects[0]["create_new_user"]["firstname_edit"].setText('')
+        self.objects[0]["create_new_user"]["lastname_edit"].setText('')
+        self.objects[0]["create_new_user"]["username_edit"].setText('')
+        self.objects[0]["create_new_user"]["password_edit"].setText('')
 
     def run(self):
         self.show()
