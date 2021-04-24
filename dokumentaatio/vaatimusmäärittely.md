@@ -24,7 +24,7 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 
 - Käyttäjä voi kirjautua järjestelmään (tehty)
 - Käyttäjä voi luoda itselleen tunnuksen järjestelmään (tehty)
-- Käyttäjä voi kirjautua ulos järjestelmästä
+- Käyttäjä voi kirjautua ulos järjestelmästä (tehty)
 
 ### Muistion toiminnallisuudet
 
@@ -37,7 +37,9 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 
 Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seuraavien toiminnallisuuksien pohjalta.
 
-- Markdown-muotoilulle tuki
+- Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2) (tehty)
+  - taulukkotuki, listatuki, checklist tuki lisätty
+- Tyylittely, vakiotyyli tarvitsee parannusta
 - Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
 - Lajittelumahdollisuudet
 - Median upottaminen

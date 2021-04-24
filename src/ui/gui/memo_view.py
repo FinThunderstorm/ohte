@@ -1,4 +1,6 @@
 from functools import partial
+from markdown2 import markdown
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit, QFrame
 from utils.helpers import get_empty_memo
 
@@ -40,13 +42,20 @@ class MemoView(QFrame):
 
         self.setWindowTitle('Muistio')
         self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
-        # self.setGeometry(0, 0, self.__screen_width, self.__screen_height)
+        width = 1650 if self.__screen_width > 1650 else self.__screen_width
+        height = 1050 if self.__screen_height > 1050 else self.__screen_height
+        width_pos = self.__screen_width//2 - width//2
+        height_pos = self.__screen_height//2 - height//2
 
-        self.layout.addLayout(self.layouts[0]["mainmenu"], 0, 0)
+        # self.setGeometry(width_pos, height_pos, width, height)
+
+        self.layout.addWidget(self.frames[0]["mainmenu"], 0, 0)
         # self.layout.addLayout(self.layouts[0]["editor"], 0, 1)
         self.layout.addWidget(self.frames[0]["editor"], 0, 1)
         self.layout.addWidget(self.frames[0]["viewer"], 0, 1)
         # self.layout.addLayout(self.layouts[0]["viewer"], 0, 1)
+
+        self.layout.setAlignment(self.frames[0]["mainmenu"], Qt.AlignLeft)
 
         self.setLayout(self.layout)
 
@@ -59,9 +68,12 @@ class MemoView(QFrame):
         # self.__set_editor_memo(self.testing_memo)
 
     def __initialize_mainmenu(self):
+        self.frames[0]["mainmenu"] = QFrame()
         self.objects[0]["mainmenu"] = {}
         self.objects[0]["mainmenu_memos"] = {}
         self.layouts[0]["mainmenu"] = QVBoxLayout()
+
+        self.frames[0]["mainmenu"].setFixedWidth(400)
 
         self.__initialize_extended_menu()
 
@@ -87,6 +99,8 @@ class MemoView(QFrame):
         self.objects[0]["mainmenu"]["new_memo_button"].clicked.connect(
             self.__new_memo)
         self.layouts[0]["mainmenu"].addWidget(new_memo_button)
+
+        self.frames[0]["mainmenu"].setLayout(self.layouts[0]["mainmenu"])
 
     def __update_memos_into_mainmenu(self):
         memos = self.memo_service.get('author', self.user[0])
@@ -128,12 +142,14 @@ class MemoView(QFrame):
     def __set_viewer_memo(self, memo):
         self.__viewer_memo = memo
 
+        content_in_html = markdown(self.__viewer_memo.content, extras=[
+                                   "tables", "task_list", "cuddled-lists", "code-friendly"])
+
         self.objects[0]["viewer"]["title_label"].setText(
             '<h1><u>'+self.__viewer_memo.title+'</u></h1>')
         self.objects[0]["viewer"]["info_label"].setText('<p>'+self.__viewer_memo.date.strftime(
             '%a %d.%m.%Y %H:%M')+' | '+self.__viewer_memo.author.firstname+" "+self.__viewer_memo.author.lastname+'</p>')
-        self.objects[0]["viewer"]["content_label"].setText(
-            self.__viewer_memo.content)
+        self.objects[0]["viewer"]["content_label"].setText(content_in_html)
 
         self.objects[0]["viewer_toolbar"]["edit_button"].clicked.connect(
             partial(self.__edit_memo, self.__viewer_memo.id))
