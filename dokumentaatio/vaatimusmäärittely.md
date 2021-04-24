@@ -22,8 +22,8 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 
 ### Käyttäjänhallinta
 
-- Käyttäjä voi kirjautua järjestelmään
-- Käyttäjä voi luoda itselleen tunnuksen järjestelmään (sovelluslogiikka tehty, GUI puuttuu)
+- Käyttäjä voi kirjautua järjestelmään (tehty)
+- Käyttäjä voi luoda itselleen tunnuksen järjestelmään (tehty)
 - Käyttäjä voi kirjautua ulos järjestelmästä
 
 ### Muistion toiminnallisuudet
@@ -31,7 +31,7 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 - Käyttäjä voi lukea muistioita (tehty)
 - Käyttäjä voi luoda muistion (tehty)
 - Käyttäjä voi muokata muistiota (tehty)
-- Käyttäjä voi poistaa muistion (työn alla)
+- Käyttäjä voi poistaa muistion (tehty)
 
 ## Jatkokehittämismahdollisuudet
 

@@ -90,6 +90,7 @@ def get_id(sid=None):
 
 def get_empty_memo():
     return Memo(
+        id=get_id("6072d33e3a3c627a49901ce8"),
         author=get_test_memo_user(),
         title="",
         content="",

@@ -31,7 +31,7 @@ class LoginView(QFrame):
         self.layout.addWidget(self.frames[0]["login"])
         self.layout.addWidget(self.frames[0]["create_new_user"])
 
-        self.frames[0]["login"].hide()
+        self.frames[0]["create_new_user"].hide()
 
         self.setLayout(self.layout)
 
@@ -51,6 +51,8 @@ class LoginView(QFrame):
             self.objects[0]["login"]["username_label"], 1, 0)
 
         self.objects[0]["login"]["username_edit"] = QLineEdit()
+        self.objects[0]["login"]["username_edit"].returnPressed.connect(
+            self.__login)
         self.layouts[0]["login"].addWidget(
             self.objects[0]["login"]["username_edit"], 1, 1)
 
@@ -90,7 +92,10 @@ class LoginView(QFrame):
         result = self.user_service.login(username, password)
         if result:
             self.__user[0] = result
-            self.objects[0]["login"]["app_name_label"].setText("logged in")
+
+            self.objects[0]["extended_menu"]["name_label"].setText(
+                self.__user[0].firstname+" "+self.__user[0].lastname)
+
             self.frames[0]["loginview"].hide()
             self.frames[0]["memoview"].run()
         else:

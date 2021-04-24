@@ -47,6 +47,10 @@ class TestUserService(unittest.TestCase):
         )
         self.assertIsNone(second_saved_user)
 
+    def test_create_user_as_empty_reutrns_none(self):
+        result = self.user_service.create("", "", "", "")
+        self.assertIsNone(result)
+
     # update
     def test_update_changes_values(self):
         firstname = "Changed"

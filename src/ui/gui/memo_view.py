@@ -13,12 +13,8 @@ class MemoView(QFrame):
         self.frames = frames if frames else {}
 
         self.user = user
-        self.memos = self.memo_service.get()
-        if len(self.memos) > 0:
-            self.testing_memo = self.memo_service.get(
-                'id', self.memos[0].id)
-        else:
-            self.testing_memo = get_empty_memo()
+        self.memos = []
+        self.testing_memo = get_empty_memo()
 
         self.main_menu_handlers = {
             "show_memo": "toot",
@@ -30,6 +26,9 @@ class MemoView(QFrame):
 
         self.layout = QGridLayout()
         self.__active_screen = 'viewer'
+        self.__extended_menu = 'hidden'
+        self.__viewer_state = 'hidden'
+        self.__editor_state = 'hidden'
 
         self.__viewer_memo = None if len(self.memos) > 0 else get_empty_memo()
         self.__editor_memo = None if len(self.memos) > 0 else get_empty_memo()
@@ -53,25 +52,31 @@ class MemoView(QFrame):
 
     def run(self):
         self.show()
-        print(self.user[0].firstname, self.user[0].lastname)
-        self.__set_viewer_memo(self.testing_memo)
-        self.__set_editor_memo(self.testing_memo)
+
+        self.__update_memos_into_mainmenu()
+
+        # self.__set_viewer_memo(self.testing_memo)
+        # self.__set_editor_memo(self.testing_memo)
 
     def __initialize_mainmenu(self):
         self.objects[0]["mainmenu"] = {}
         self.objects[0]["mainmenu_memos"] = {}
         self.layouts[0]["mainmenu"] = QVBoxLayout()
-        main_menu_button = QPushButton('Main menu')
-        self.objects[0]["mainmenu"]["mainmenu_button"] = main_menu_button
-        self.layouts[0]["mainmenu"].addWidget(main_menu_button)
+
+        self.__initialize_extended_menu()
+
+        self.objects[0]["mainmenu"]["mainmenu_button"] = QPushButton(
+            'Main menu')
+        self.objects[0]["mainmenu"]["mainmenu_button"].clicked.connect(
+            self.__show_hide_extended_menu)
+        self.layouts[0]["mainmenu"].addWidget(
+            self.objects[0]["mainmenu"]["mainmenu_button"])
+
+        self.layouts[0]["mainmenu"].addWidget(self.frames[0]["extended_menu"])
+
         self.layouts[0]["mainmenu"].addSpacing(25)
 
         self.layouts[0]["mainmenu_memos"] = QVBoxLayout()
-        for memo in self.memos:
-            memo_button = QPushButton(memo.title)
-            memo_button.clicked.connect(partial(self.__show_memo, memo.id))
-            self.objects[0]["mainmenu_memos"][memo.id] = memo_button
-            self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
 
         self.layouts[0]["mainmenu"].addLayout(
             self.layouts[0]["mainmenu_memos"])
@@ -82,6 +87,19 @@ class MemoView(QFrame):
         self.objects[0]["mainmenu"]["new_memo_button"].clicked.connect(
             self.__new_memo)
         self.layouts[0]["mainmenu"].addWidget(new_memo_button)
+
+    def __update_memos_into_mainmenu(self):
+        memos = self.memo_service.get('author', self.user[0])
+        if memos:
+            for memo in memos:
+                memo_button = QPushButton(memo.title)
+                memo_button.clicked.connect(partial(self.__show_memo, memo.id))
+                self.objects[0]["mainmenu_memos"][memo.id] = memo_button
+                self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
+
+    def __empty_memos_from_mainmenu(self):
+        for button in self.objects[0]["mainmenu_memos"].values():
+            button.setParent(None)
 
     def __initialize_viewer(self):
         self.frames[0]["viewer"] = QFrame()
@@ -105,6 +123,8 @@ class MemoView(QFrame):
         self.layouts[0]["viewer"].addStretch()
         self.layouts[0]["viewer"].addLayout(self.layouts[0]["viewer_toolbar"])
 
+        self.frames[0]["viewer"].hide()
+
     def __set_viewer_memo(self, memo):
         self.__viewer_memo = memo
 
@@ -117,6 +137,9 @@ class MemoView(QFrame):
 
         self.objects[0]["viewer_toolbar"]["edit_button"].clicked.connect(
             partial(self.__edit_memo, self.__viewer_memo.id))
+
+        self.frames[0]["viewer"].show()
+        self.__viewer_state = "shown"
 
     def __initialize_editor(self):
         self.objects[0]["editor"] = {}
@@ -294,8 +317,10 @@ class MemoView(QFrame):
         memo_to_be_removed = self.__viewer_memo
         result = self.memo_service.remove(memo_to_be_removed.id)
         if result:
-            self.objects[0]["mainmenu_memos"][memo_to_be_removed.id].deleteLater()
-            # self.__viewer_memo = None
+            self.objects[0]["mainmenu_memos"][memo_to_be_removed.id].setParent(
+                None)
+            self.frames[0]["viewer"].hide()
+            self.__viewer_state = "hidden"
             self.objects[0]["viewer"]["title_label"].setText('')
             self.objects[0]["viewer"]["info_label"].setText('')
             self.objects[0]["viewer"]["content_label"].setText('')
@@ -306,3 +331,56 @@ class MemoView(QFrame):
             #     self.__active_screen = "viewer"
 
         self.frames[0]["remove_memo"].done(1)
+
+    def __initialize_extended_menu(self):
+        self.frames[0]["extended_menu"] = QFrame()
+        self.objects[0]["extended_menu"] = {}
+
+        self.layouts[0]["extended_menu"] = QVBoxLayout()
+        self.objects[0]["extended_menu"]["name_label"] = QLabel(
+            self.user[0].firstname+" "+self.user[0].lastname)
+        self.layouts[0]["extended_menu"].addWidget(
+            self.objects[0]["extended_menu"]["name_label"])
+        self.objects[0]["extended_menu"]["logout_button"] = QPushButton(
+            'Log out')
+        self.objects[0]["extended_menu"]["logout_button"].clicked.connect(
+            self.__handle_logout)
+        self.layouts[0]["extended_menu"].addWidget(
+            self.objects[0]["extended_menu"]["logout_button"])
+        self.objects[0]["extended_menu"]["settings_button"] = QPushButton(
+            'Settings')
+        self.objects[0]["extended_menu"]["settings_button"].clicked.connect(
+            self.__handle_settings)
+        self.layouts[0]["extended_menu"].addWidget(
+            self.objects[0]["extended_menu"]["settings_button"])
+
+        self.frames[0]["extended_menu"].setLayout(
+            self.layouts[0]["extended_menu"])
+
+        self.frames[0]["extended_menu"].hide()
+
+    def __handle_logout(self):
+        self.user[0] = None
+        self.__empty_memos_from_mainmenu()
+
+        self.frames[0]["viewer"].hide()
+        self.__viewer_state = "hidden"
+        self.frames[0]["editor"].hide()
+        self.__editor_state = "hidden"
+
+        self.frames[0]["extended_menu"].hide()
+        self.__extended_menu = "hidden"
+
+        self.frames[0]["memoview"].hide()
+        self.frames[0]["loginview"].show()
+
+    def __handle_settings(self):
+        pass
+
+    def __show_hide_extended_menu(self):
+        if self.__extended_menu == 'hidden':
+            self.frames[0]["extended_menu"].show()
+            self.__extended_menu = "shown"
+        else:
+            self.frames[0]["extended_menu"].hide()
+            self.__extended_menu = "hidden"

@@ -7,6 +7,8 @@ class UserService:
         self.user_repository = user_repository
 
     def create(self, firstname, lastname, username, password):
+        if firstname == "" or lastname == "" or username == "" or password == "":
+            return None
         user = {
             "firstname": firstname,
             "lastname": lastname,
