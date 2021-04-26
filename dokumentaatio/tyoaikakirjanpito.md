@@ -21,10 +21,11 @@
 | 18.4     | 1h     | Tietokannan yhdistämisen testien räpeltäminen, pytest-socket ei saanut estettyä - WIP |
 | 18.4     | 5,5h   | Graafisen käyttöliittymän rakentamisen aloittaminen,                                  |
 |          |        | PyQt5 toteaminen sopivammaksi GUI-kirjastoksi ajatellen tulevia kehityskohteita       |
-| 20.4     | 4h (l) | Muistioiden toiminnallisuudet alkeellisesti valmiiksi graafiseen käyttöliittymään     |
+| 20.4     | 4h     | Muistioiden toiminnallisuudet alkeellisesti valmiiksi graafiseen käyttöliittymään     |
 | 24.4     | 4h     | Kirjautuminen graafiseen käyttöliittymään, yleinen GUI:n hiominen                     |
-| 24.4     | 0,5h   | Markdown-tuki muistioille                                                             |
-| Yhteensä | 47h    |                                                                                       |
+| 24.4     | 1,5h   | Markdown-tuki muistioille                                                             |
+| 25.4     | 7h     | Kuvatuki memoihin ja sen tarvitsemat sovelluslogiikat                                 |
+| Yhteensä | 59,5h  |                                                                                       |
 
 ## Todo-lista
 

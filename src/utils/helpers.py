@@ -1,8 +1,10 @@
 from datetime import datetime
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 from bcrypt import gensalt, hashpw, checkpw
 from entities.user import User
 from entities.memo import Memo
+from entities.image import Image
 
 
 def get_time():
@@ -50,6 +52,15 @@ def get_test_memo_obj():
     return memo
 
 
+def get_test_image_obj():
+    image = Image(
+        author=get_test_memo_user(),
+        name="Test Image",
+        image="unvalid image base64 encoding",
+    )
+    return image
+
+
 def get_test_user(index=None):
     user = {
         "firstname": "Test",
@@ -73,6 +84,10 @@ def get_type_memo():
     return type(get_test_memo_obj())
 
 
+def get_type_image():
+    return type(get_test_image_obj())
+
+
 def generate_password_hash(password):
     salt = gensalt()
     password_hash = hashpw(bytes(password, 'utf-8'), salt)
@@ -85,7 +100,10 @@ def check_password(password, hashed_password):
 
 
 def get_id(sid=None):
-    return ObjectId(sid)
+    try:
+        return ObjectId(sid)
+    except InvalidId:
+        return None
 
 
 def get_empty_memo():

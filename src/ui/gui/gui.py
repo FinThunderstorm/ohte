@@ -6,7 +6,7 @@ from utils.helpers import get_test_memo_user
 
 
 class GUI:
-    def __init__(self, memo_service, user_service):
+    def __init__(self, memo_service, user_service, image_service):
         self.__app = QApplication(sys.argv)
         self.__screen = self.__app.primaryScreen()
         self.__screen_available = (self.__screen.availableGeometry(
@@ -14,6 +14,7 @@ class GUI:
 
         self.__memo_service = memo_service
         self.__user_service = user_service
+        self.__image_service = image_service
         self.__user = [get_test_memo_user(
             '6072d33e3a3c627a49901ce8', "notvalid")]
 
@@ -22,7 +23,7 @@ class GUI:
         self.frames = [{}]
 
         self.__memo_view = MemoView(
-            self.__screen_available, self.__memo_service, self.__user, self.objects, self.layouts, self.frames)
+            self.__screen_available, self.__memo_service, self.__image_service, self.__user, self.objects, self.layouts, self.frames)
         self.__login_view = LoginView(
             self.__screen_available, self.__user_service, self.__user, self.objects, self.layouts, self.frames)
 

@@ -1,15 +1,22 @@
-from functools import partial
-from markdown2 import markdown
+from utils.helpers import get_empty_memo, get_id
+from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit, QFrame
-from utils.helpers import get_empty_memo
+from markdown2 import markdown
+from functools import partial
 
 
 class MemoView(QFrame):
-    def __init__(self, screen, memo_service, user, objects, layouts, frames):
+    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames):
         super().__init__()
         self.__screen_width, self.__screen_height = screen
+        self.__active_width = 1650 if self.__screen_width > 1650 else self.__screen_width
+        self.__active_height = 1050 if self.__screen_height > 1050 else self.__screen_height
+        # self.setFixedWidth(self.__active_width)
+        self.setFixedSize(self.__active_width, self.__active_height)
+
         self.memo_service = memo_service
+        self.image_service = image_service
+
         self.objects = objects if objects else {}
         self.layouts = layouts if layouts else {}
         self.frames = frames if frames else {}
@@ -42,12 +49,10 @@ class MemoView(QFrame):
 
         self.setWindowTitle('Muistio')
         self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
-        width = 1650 if self.__screen_width > 1650 else self.__screen_width
-        height = 1050 if self.__screen_height > 1050 else self.__screen_height
-        width_pos = self.__screen_width//2 - width//2
-        height_pos = self.__screen_height//2 - height//2
+        width_pos = self.__screen_width//2 - self.__active_width//2
+        height_pos = self.__screen_height//2 - self.__active_height//2
 
-        # self.setGeometry(width_pos, height_pos, width, height)
+        # self.setGeometry(width_pos, height_pos, self.__active_width, self.__active_height)
 
         self.layout.addWidget(self.frames[0]["mainmenu"], 0, 0)
         # self.layout.addLayout(self.layouts[0]["editor"], 0, 1)
@@ -56,6 +61,8 @@ class MemoView(QFrame):
         # self.layout.addLayout(self.layouts[0]["viewer"], 0, 1)
 
         self.layout.setAlignment(self.frames[0]["mainmenu"], Qt.AlignLeft)
+        self.layout.setAlignment(self.frames[0]["editor"], Qt.AlignRight)
+        self.layout.setAlignment(self.frames[0]["viewer"], Qt.AlignRight)
 
         self.setLayout(self.layout)
 
@@ -120,6 +127,7 @@ class MemoView(QFrame):
         self.objects[0]["viewer"] = {}
         self.layouts[0]["viewer"] = QVBoxLayout()
         self.frames[0]["viewer"].setLayout(self.layouts[0]["viewer"])
+        self.frames[0]["viewer"].setFixedWidth(self.__active_width-400)
 
         self.__initialize_viewer_toolbar()
         self.__viewer_memo = None
@@ -127,23 +135,65 @@ class MemoView(QFrame):
         self.objects[0]["viewer"]["title_label"] = QLabel()
         self.objects[0]["viewer"]["info_label"] = QLabel()
         self.objects[0]["viewer"]["content_label"] = QLabel()
+        self.objects[0]["viewer"]["content_scroll"] = QScrollArea()
+        self.objects[0]["viewer"]["content_scroll"].setWidget(
+            self.objects[0]["viewer"]["content_label"])
 
         self.layouts[0]["viewer"].addWidget(
             self.objects[0]["viewer"]["title_label"])
         self.layouts[0]["viewer"].addWidget(
             self.objects[0]["viewer"]["info_label"])
         self.layouts[0]["viewer"].addWidget(
+            self.objects[0]["viewer"]["content_scroll"])
+
+        self.objects[0]["viewer"]["content_scroll"].setWidgetResizable(True)
+        self.objects[0]["viewer"]["content_scroll"].ensureWidgetVisible(
             self.objects[0]["viewer"]["content_label"])
+        self.objects[0]["viewer"]["content_label"].setWordWrap(True)
+        self.objects[0]["viewer"]["content_label"].setAlignment(Qt.AlignTop)
+        self.objects[0]["viewer"]["content_scroll"].setAlignment(Qt.AlignTop)
+        self.objects[0]["viewer"]["content_scroll"].setFixedSize(
+            self.__active_width-450, self.__active_height-200)
+        self.objects[0]["viewer"]["content_scroll"].setStyleSheet(
+            'QScrollArea { border: 0px;}')
         self.layouts[0]["viewer"].addStretch()
         self.layouts[0]["viewer"].addLayout(self.layouts[0]["viewer_toolbar"])
 
         self.frames[0]["viewer"].hide()
+
+    def __format_images(self, content):
+        content_in_html = content
+        img_tag = content_in_html.find("<img")
+        while img_tag != -1:
+            img_tag_src_starts = img_tag + 10
+            img_tag_src_ends = content_in_html.find('"', img_tag_src_starts)
+            img_src = content_in_html[img_tag_src_starts:img_tag_src_ends]
+
+            img_id = get_id(img_src)
+
+            if img_id:
+                image = self.image_service.get('id', get_id(img_src))
+                img_string = "data:image/"+image.filetype+";base64,"+image.image
+                width = image.width if image.width < self.__active_width - \
+                    500 else self.__active_width - 500
+
+                content_in_html = content_in_html[:img_tag_src_ends+1] + \
+                    ' width="'+str(width)+'" ' + \
+                    content_in_html[img_tag_src_ends+1:]
+
+                content_in_html = content_in_html[:img_tag_src_starts] + \
+                    img_string+content_in_html[img_tag_src_ends:]
+            img_tag = content_in_html.find("<img", img_tag_src_ends)
+
+        return content_in_html
 
     def __set_viewer_memo(self, memo):
         self.__viewer_memo = memo
 
         content_in_html = markdown(self.__viewer_memo.content, extras=[
                                    "tables", "task_list", "cuddled-lists", "code-friendly"])
+
+        content_in_html = self.__format_images(content_in_html)
 
         self.objects[0]["viewer"]["title_label"].setText(
             '<h1><u>'+self.__viewer_memo.title+'</u></h1>')
@@ -163,12 +213,13 @@ class MemoView(QFrame):
         self.frames[0]["editor"] = QFrame()
         self.frames[0]["editor"].setLayout(self.layouts[0]["editor"])
         self.frames[0]["editor"].hide()
+        self.frames[0]["editor"].setFixedWidth(self.__active_width-450)
 
         self.__initialize_editor_toolbar()
 
         self.objects[0]["editor"]["title_edit"] = QLineEdit()
         self.objects[0]["editor"]["info_label"] = QLabel()
-        self.objects[0]["editor"]["content_edit"] = QPlainTextEdit()
+        self.objects[0]["editor"]["content_edit"] = QTextEdit()
 
         self.layouts[0]["editor"].addWidget(
             self.objects[0]["editor"]["title_edit"])
@@ -197,19 +248,117 @@ class MemoView(QFrame):
             'Cancel')
         self.objects[0]["editor_toolbar"]["remove_button"] = QPushButton(
             'Remove')
+        self.objects[0]["editor_toolbar"]["add_image_button"] = QPushButton(
+            'Add image')
 
         self.objects[0]["editor_toolbar"]["save_button"].clicked.connect(
             self.__save_memo)
-        self.objects[0]["editor_toolbar"]["remove_button"].clicked.connect(
-            self.__remove_memo)
+        self.objects[0]["editor_toolbar"]["cancel_button"].clicked.connect(
+            self.__cancel_edit)
+        self.objects[0]["editor_toolbar"]["add_image_button"].clicked.connect(
+            self.__handle_image)
 
         self.layouts[0]["editor_toolbar"].addWidget(
             self.objects[0]["editor_toolbar"]["save_button"])
         self.layouts[0]["editor_toolbar"].addWidget(
             self.objects[0]["editor_toolbar"]["cancel_button"])
-        # self.layouts[0]["editor_toolbar"].addWidget(
-        #     self.objects[0]["editor_toolbar"]["remove_button"])
         self.layouts[0]["editor_toolbar"].addStretch()
+        self.layouts[0]["editor_toolbar"].addWidget(
+            self.objects[0]["editor_toolbar"]["add_image_button"])
+
+    def __handle_image(self):
+        self.frames[0]["image_selector"] = QDialog()
+        self.objects[0]["image_selector"] = {}
+        self.frames[0]["image_selector"].setWindowTitle("Image selector")
+
+        columns = (self.__active_width-800) // 250
+
+        self.layouts[0]["image_selector"] = QGridLayout()
+        self.objects[0]["image_selector"]["title_label"] = QLabel(
+            '<h1>All images</h1>')
+        self.layouts[0]["image_selector"].addWidget(
+            self.objects[0]["image_selector"]["title_label"], 0, 0)
+
+        images = self.image_service.get("author", self.user[0])
+        imgs_in_row = 0
+        current_row = 1
+        self.objects[0]["image_selector"]["img_grid"] = {}
+        self.layouts[0]["image_selector_grid"] = {}
+        for image in images:
+            self.layouts[0]["image_selector_grid"][image.id] = QVBoxLayout()
+            self.objects[0]["image_selector"]["img_grid"][image.id] = {}
+            self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"] = QLabel(
+            )
+            self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"] = QLabel(
+                image.name+'<br />Width:'+str(image.width))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"] = QPushButton(
+                'Select')
+
+            self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"].setText(
+                '<img src="data:image/'+image.filetype+';base64,' +
+                image.image+'" width="250"  alt="" />'
+            )
+            self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"].clicked.connect(
+                partial(self.__add_image, image.id))
+
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"])
+            self.layouts[0]["image_selector"].addLayout(
+                self.layouts[0]["image_selector_grid"][image.id], current_row, imgs_in_row)
+            imgs_in_row += 1
+            if imgs_in_row == columns:
+                imgs_in_row = 0
+                current_row += 1
+
+        self.layouts[0]["image_selector_toolbar"] = QHBoxLayout()
+        self.objects[0]["image_selector"]["close_button"] = QPushButton(
+            'Close')
+        self.objects[0]["image_selector"]["add_new_button"] = QPushButton(
+            'Add new image')
+
+        self.objects[0]["image_selector"]["close_button"].clicked.connect(
+            self.__close_image_selector)
+
+        self.layouts[0]["image_selector_toolbar"].addWidget(
+            self.objects[0]["image_selector"]["close_button"])
+        self.layouts[0]["image_selector_toolbar"].addWidget(
+            self.objects[0]["image_selector"]["add_new_button"])
+
+        self.layouts[0]["image_selector"].addLayout(
+            self.layouts[0]["image_selector_toolbar"], current_row+1, 0)
+
+        self.frames[0]["image_selector"].setLayout(
+            self.layouts[0]["image_selector"])
+
+        self.frames[0]["image_selector"].exec_()
+
+    def __close_image_selector(self):
+        self.frames[0]["image_selector"].done(1)
+
+    def __add_image(self, image_id):
+        cursor = self.objects[0]["editor"]["content_edit"].textCursor()
+        cursor_pos = cursor.position()
+        image_string = "![]("+str(image_id)+")"
+
+        content = self.objects[0]["editor"]["content_edit"].toPlainText()
+
+        content = content[:cursor_pos] + image_string + content[cursor_pos:]
+        self.objects[0]["editor"]["content_edit"].setPlainText(content)
+        cursor = self.objects[0]["editor"]["content_edit"].textCursor()
+        cursor.setPosition(cursor_pos+len(image_string))
+        self.objects[0]["editor"]["content_edit"].setTextCursor(cursor)
+
+        self.frames[0]["image_selector"].done(1)
+
+    def __cancel_edit(self):
+        if self.__active_screen == "editor":
+            self.frames[0]["editor"].hide()
+            self.frames[0]["viewer"].show()
+            self.__active_screen = "viewer"
 
     def __initialize_viewer_toolbar(self):
         self.objects[0]["viewer_toolbar"] = {}
