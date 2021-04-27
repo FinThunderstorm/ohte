@@ -1,6 +1,7 @@
 from utils.helpers import get_empty_memo, get_id
-from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
+from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIntValidator
 from markdown2 import markdown
 from functools import partial
 
@@ -271,12 +272,27 @@ class MemoView(QFrame):
         self.objects[0]["image_selector"] = {}
         self.frames[0]["image_selector"].setWindowTitle("Image selector")
 
+        self.layouts[0]["image_selector"] = QVBoxLayout()
+        self.objects[0]["image_selector"]["tabs"] = QTabWidget()
+
+        self.frames[0]["image_selector_select"] = QFrame()
+        self.frames[0]["image_selector_add"] = QFrame()
+        self.__initialize_image_selector_add()
+
+        self.objects[0]["image_selector"]["tabs"].addTab(
+            self.frames[0]["image_selector_select"], "Select")
+        self.objects[0]["image_selector"]["tabs"].addTab(
+            self.frames[0]["image_selector_add"], "Add new")
+
+        self.layouts[0]["image_selector"].addWidget(
+            self.objects[0]["image_selector"]["tabs"])
+
         columns = (self.__active_width-800) // 250
 
-        self.layouts[0]["image_selector"] = QGridLayout()
+        self.layouts[0]["image_selector_select"] = QGridLayout()
         self.objects[0]["image_selector"]["title_label"] = QLabel(
             '<h1>All images</h1>')
-        self.layouts[0]["image_selector"].addWidget(
+        self.layouts[0]["image_selector_select"].addWidget(
             self.objects[0]["image_selector"]["title_label"], 0, 0)
 
         images = self.image_service.get("author", self.user[0])
@@ -307,7 +323,7 @@ class MemoView(QFrame):
                 self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"])
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"])
-            self.layouts[0]["image_selector"].addLayout(
+            self.layouts[0]["image_selector_select"].addLayout(
                 self.layouts[0]["image_selector_grid"][image.id], current_row, imgs_in_row)
             imgs_in_row += 1
             if imgs_in_row == columns:
@@ -317,24 +333,106 @@ class MemoView(QFrame):
         self.layouts[0]["image_selector_toolbar"] = QHBoxLayout()
         self.objects[0]["image_selector"]["close_button"] = QPushButton(
             'Close')
-        self.objects[0]["image_selector"]["add_new_button"] = QPushButton(
-            'Add new image')
 
         self.objects[0]["image_selector"]["close_button"].clicked.connect(
             self.__close_image_selector)
 
         self.layouts[0]["image_selector_toolbar"].addWidget(
             self.objects[0]["image_selector"]["close_button"])
-        self.layouts[0]["image_selector_toolbar"].addWidget(
-            self.objects[0]["image_selector"]["add_new_button"])
 
-        self.layouts[0]["image_selector"].addLayout(
-            self.layouts[0]["image_selector_toolbar"], current_row+1, 0)
+        self.layouts[0]["image_selector_select"].addLayout(
+            self.layouts[0]["image_selector_toolbar"], current_row+1, 0, 1, imgs_in_row if imgs_in_row > 1 else 1)
+
+        self.frames[0]["image_selector_select"].setLayout(
+            self.layouts[0]["image_selector_select"])
 
         self.frames[0]["image_selector"].setLayout(
             self.layouts[0]["image_selector"])
 
         self.frames[0]["image_selector"].exec_()
+
+    def __initialize_image_selector_add(self):
+        self.layouts[0]["image_selector_add"] = QGridLayout()
+        self.objects[0]["image_selector_add"] = {}
+
+        self.objects[0]["image_selector_add"]["title_label"] = QLabel(
+            '<h1>Add new image</h1>')
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["title_label"], 0, 0)
+
+        self.objects[0]["image_selector_add"]["loc_label"] = QLabel(
+            'Image location:')
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["loc_label"], 1, 0)
+
+        self.objects[0]["image_selector_add"]["file_loc_edit"] = QLineEdit()
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["file_loc_edit"], 1, 1)
+
+        self.objects[0]["image_selector_add"]["select_button"] = QPushButton(
+            'Select')
+        self.objects[0]["image_selector_add"]["select_button"].clicked.connect(
+            self.__handle_add_image_filedialog)
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["select_button"], 1, 2)
+
+        self.objects[0]["image_selector_add"]["name_label"] = QLabel(
+            'Name:')
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["name_label"], 2, 0)
+
+        self.objects[0]["image_selector_add"]["name_edit"] = QLineEdit()
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["name_edit"], 2, 1)
+
+        self.objects[0]["image_selector_add"]["width_label"] = QLabel(
+            'Width:')
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["width_label"], 3, 0)
+
+        self.objects[0]["image_selector_add"]["width_edit"] = QLineEdit()
+        self.objects[0]["image_selector_add"]["width_edit"].setValidator(
+            QIntValidator(0, 7680, self))
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["width_edit"], 3, 1)
+
+        self.objects[0]["image_selector_add"]["error_label"] = QLabel()
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["error_label"], 4, 0)
+
+        self.objects[0]["image_selector_add"]["add_button"] = QPushButton(
+            'Add')
+        self.objects[0]["image_selector_add"]["add_button"].clicked.connect(
+            self.__handle_add_image_to_db)
+        self.layouts[0]["image_selector_add"].addWidget(
+            self.objects[0]["image_selector_add"]["add_button"], 5, 0)
+
+        self.frames[0]["image_selector_add"].setLayout(
+            self.layouts[0]["image_selector_add"])
+
+    def __handle_add_image_to_db(self):
+        self.objects[0]["image_selector_add"]["error_label"].setText('')
+        name = self.objects[0]["image_selector_add"]["name_edit"].text()
+        width = int(self.objects[0]["image_selector_add"]["width_edit"].text())
+        file_location = self.objects[0]["image_selector_add"]["file_loc_edit"].text(
+        )
+        if name == "" or width == "" or file_location == "":
+            pass
+        image = self.image_service.create(
+            self.user[0].id, name, file_location, width)
+        if image:
+            self.__add_image(image.id)
+            self.__close_image_selector()
+        else:
+            self.objects[0]["image_selector_add"]["error_label"].setText(
+                'error while uploading image, try again')
+
+    def __handle_add_image_filedialog(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            self, "Add image", "~/", "Image files (*.jpg *.jpeg *.png *.gif *.svg)")
+
+        self.objects[0]["image_selector_add"]["file_loc_edit"].setText(
+            filename)
 
     def __close_image_selector(self):
         self.frames[0]["image_selector"].done(1)
