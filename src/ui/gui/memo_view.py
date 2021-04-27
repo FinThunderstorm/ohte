@@ -289,24 +289,28 @@ class MemoView(QFrame):
 
         columns = (self.__active_width-800) // 250
 
-        self.layouts[0]["image_selector_select"] = QGridLayout()
+        self.layouts[0]["image_selector_select"] = QVBoxLayout()
         self.objects[0]["image_selector"]["title_label"] = QLabel(
             '<h1>All images</h1>')
         self.layouts[0]["image_selector_select"].addWidget(
-            self.objects[0]["image_selector"]["title_label"], 0, 0)
+            self.objects[0]["image_selector"]["title_label"])
 
         images = self.image_service.get("author", self.user[0])
         imgs_in_row = 0
         current_row = 1
         self.objects[0]["image_selector"]["img_grid"] = {}
         self.layouts[0]["image_selector_grid"] = {}
+        self.frames[0]["image_selector_grid"] = QFrame()
+        self.layouts[0]["image_selector_select_grid"] = QGridLayout()
+        self.frames[0]["image_selector_grid"].setLayout(
+            self.layouts[0]["image_selector_select_grid"])
         for image in images:
             self.layouts[0]["image_selector_grid"][image.id] = QVBoxLayout()
             self.objects[0]["image_selector"]["img_grid"][image.id] = {}
             self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"] = QLabel(
             )
             self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"] = QLabel(
-                image.name+'<br />Width:'+str(image.width))
+                image.name+'<br />Width: '+str(image.width))
             self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"] = QPushButton(
                 'Select')
 
@@ -317,13 +321,14 @@ class MemoView(QFrame):
             self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"].clicked.connect(
                 partial(self.__add_image, image.id))
 
+            self.layouts[0]["image_selector_grid"][image.id].addStretch()
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"])
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"])
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"])
-            self.layouts[0]["image_selector_select"].addLayout(
+            self.layouts[0]["image_selector_select_grid"].addLayout(
                 self.layouts[0]["image_selector_grid"][image.id], current_row, imgs_in_row)
             imgs_in_row += 1
             if imgs_in_row == columns:
@@ -340,8 +345,26 @@ class MemoView(QFrame):
         self.layouts[0]["image_selector_toolbar"].addWidget(
             self.objects[0]["image_selector"]["close_button"])
 
+        self.objects[0]["image_selector"]["content_scroll"] = QScrollArea()
+        self.objects[0]["image_selector"]["content_scroll"].setWidget(
+            self.frames[0]["image_selector_grid"])
+        self.objects[0]["image_selector"]["content_scroll"].ensureWidgetVisible(
+            self.frames[0]["image_selector_grid"])
+        self.objects[0]["image_selector"]["content_scroll"].ensureVisible(
+            0, 0, 0, 0)
+        self.objects[0]["image_selector"]["content_scroll"].setWidgetResizable(
+            True)
+        self.objects[0]["image_selector"]["content_scroll"].setAlignment(
+            Qt.AlignTop)
+        self.objects[0]["image_selector"]["content_scroll"].setFixedSize(
+            self.__active_width-500, self.__active_height-400)
+        self.objects[0]["image_selector"]["content_scroll"].setStyleSheet(
+            'QScrollArea { border: 0px;}')
+
+        self.layouts[0]["image_selector_select"].addWidget(
+            self.objects[0]["image_selector"]["content_scroll"])
         self.layouts[0]["image_selector_select"].addLayout(
-            self.layouts[0]["image_selector_toolbar"], current_row+1, 0, 1, imgs_in_row if imgs_in_row > 1 else 1)
+            self.layouts[0]["image_selector_toolbar"])
 
         self.frames[0]["image_selector_select"].setLayout(
             self.layouts[0]["image_selector_select"])
