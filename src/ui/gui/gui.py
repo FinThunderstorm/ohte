@@ -23,7 +23,7 @@ class GUI:
         self.frames = [{}]
 
         self.__memo_view = MemoView(
-            self.__screen_available, self.__memo_service, self.__image_service, self.__user, self.objects, self.layouts, self.frames)
+            self.__screen_available, self.__memo_service, self.__image_service, self.__user, self.objects, self.layouts, self.frames, self.__app)
         self.__login_view = LoginView(
             self.__screen_available, self.__user_service, self.__user, self.objects, self.layouts, self.frames)
 

@@ -7,7 +7,7 @@ from functools import partial
 
 
 class MemoView(QFrame):
-    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames):
+    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames, app):
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.__active_width = 1650 if self.__screen_width > 1650 else self.__screen_width
@@ -25,6 +25,7 @@ class MemoView(QFrame):
         self.user = user
         self.memos = []
         self.testing_memo = get_empty_memo()
+        self.__app = app
 
         self.main_menu_handlers = {
             "show_memo": "toot",
@@ -49,11 +50,12 @@ class MemoView(QFrame):
         self.__initialize_mainmenu()
 
         self.setWindowTitle('Muistio')
-        self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
+        # self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
         width_pos = self.__screen_width//2 - self.__active_width//2
         height_pos = self.__screen_height//2 - self.__active_height//2
 
-        # self.setGeometry(width_pos, height_pos, self.__active_width, self.__active_height)
+        self.setGeometry(width_pos, height_pos,
+                         self.__active_width, self.__active_height)
 
         self.layout.addWidget(self.frames[0]["mainmenu"], 0, 0)
         # self.layout.addLayout(self.layouts[0]["editor"], 0, 1)
@@ -452,7 +454,7 @@ class MemoView(QFrame):
 
     def __handle_add_image_filedialog(self):
         filename, _ = QFileDialog.getOpenFileName(
-            self, "Add image", "~/", "Image files (*.jpg *.jpeg *.png *.gif *.svg)")
+            self.frames[0]["image_selector_add"], "Add image", "~/", "Image files (*.jpg *.jpeg *.png *.gif *.svg)")
 
         self.objects[0]["image_selector_add"]["file_loc_edit"].setText(
             filename)
@@ -521,10 +523,7 @@ class MemoView(QFrame):
         updated_memo = self.memo_service.update(
             self.__editor_memo.id, self.__editor_memo.author.id, title, content, self.__editor_memo.date)
         if updated_memo:
-            self.__set_viewer_memo(updated_memo)
-            self.frames[0]["editor"].hide()
-            self.frames[0]["viewer"].show()
-            self.__active_screen = "viewer"
+            self.__show_memo(updated_memo.id)
 
     def __handle_new_memo(self):
         title = self.objects[0]["new_memo"]["title_edit"].text()
