@@ -39,7 +39,7 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 
 - [x] Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2) (tehty vko 5)
   - taulukkotuki ja listatuki lisätty
-- [] Kuvien upottaminen (vko 5 todo)
+- [x] Kuvien upottaminen (tehty vko 5)
 - [] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 5 todo)
 - [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 5 todo)
 - [] Asetukset (vko 6 todo)
