@@ -22,24 +22,24 @@ Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peru
 
 ### Käyttäjänhallinta
 
-- [x] Käyttäjä voi kirjautua järjestelmään (tehty vko 5)
-- [x] Käyttäjä voi luoda itselleen tunnuksen järjestelmään (tehty vko 5)
-- [x] Käyttäjä voi kirjautua ulos järjestelmästä (tehty vko 5)
+- [x] Käyttäjä voi kirjautua järjestelmään
+- [x] Käyttäjä voi luoda itselleen tunnuksen järjestelmään
+- [x] Käyttäjä voi kirjautua ulos järjestelmästä
 
 ### Muistion toiminnallisuudet
 
 - [x] Käyttäjä voi lukea muistioita
 - [x] Käyttäjä voi luoda muistion
 - [x] Käyttäjä voi muokata muistiota
-- [x] Käyttäjä voi poistaa muistion (tehty vko 5)
+- [x] Käyttäjä voi poistaa muistion
 
 ## Jatkokehittämismahdollisuudet
 
 Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seuraavien toiminnallisuuksien pohjalta.
 
-- [x] Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2) (tehty vko 5)
+- [x] Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2)
   - taulukkotuki ja listatuki lisätty
-- [x] Kuvien upottaminen (tehty vko 5)
+- [x] Kuvien upottaminen
 - [] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 5 todo)
 - [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 5 todo)
 - [] Asetukset (vko 6 todo)
@@ -48,7 +48,7 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
   - käyttäjän poistaminen ja tietojen päivittäminen
 - [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen. (vko 6)
 - [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö (vko 7)
-- [] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 5-7 todo)
+- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 6 tehty)
 - [] virheilmoitusten parantaminen & lisääminen (vko 5-7 todo)
 - [] Lajittelumahdollisuudet (vko 7)
 - [] Käyttäjähallinta

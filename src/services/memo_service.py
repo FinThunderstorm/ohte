@@ -1,3 +1,4 @@
+from trafilatura import fetch_url, extract
 from utils.helpers import get_time
 from repositories.user_repository import user_repository as default_user_repository
 from repositories.memo_repository import memo_repository as default_memo_repository
@@ -60,6 +61,30 @@ class MemoService:
             search_term = self.user_repository.get("id", search_term)
         result = self.memo_repository.count(mode, search_term)
         return result
+
+    def import_from_url(self, author_id, url):
+        try:
+            imported = fetch_url(url)
+            content = extract(imported,
+                              include_comments=False,
+                              include_tables=True,
+                              output_format="txt")
+            if not content:
+                raise ValueError
+
+            index = content.find('\n')
+            while index != -1:
+                content = content[:index] + "\n" + content[index:]
+                index = content.find('\n', index+2)
+            url_i_start = url.find("://")
+            url_i_end = url.find("/", url_i_start+3)
+            site_name = url[url_i_start+3:url_i_end] if len(
+                url[url_i_start+3:url_i_end]) < 36 else url[url_i_start+3:36]
+            title = "Imported from " + site_name
+            saved_memo = self.create(author_id, title, content)
+            return saved_memo
+        except ValueError:
+            return None
 
 
 memo_service = MemoService()

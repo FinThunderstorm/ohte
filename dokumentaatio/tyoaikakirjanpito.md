@@ -26,7 +26,8 @@
 | 24.4      | 1,5h   | Markdown-tuki muistioille                                                             |
 | 25.4      | 7h     | Kuvatuki memoihin ja sen tarvitsemat sovelluslogiikat                                 |
 | 26.4-27.4 | 2h     | Uusien kuvien lisäämisen mahdollistaminen                                             |
-| Yhteensä  | 61,5h  |                                                                                       |
+| 28.4-29.4 | 2h     | Verkkosisällön tuominen                                                               |
+| Yhteensä  | 63,5h  |                                                                                       |
 
 ## Todo-lista
 

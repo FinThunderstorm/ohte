@@ -104,11 +104,24 @@ class MemoView(QFrame):
             self.layouts[0]["mainmenu_memos"])
         self.layouts[0]["mainmenu"].addStretch()
 
-        new_memo_button = QPushButton('New memo')
-        self.objects[0]["mainmenu"]["new_memo_button"] = new_memo_button
+        self.layouts[0]["mainmenu_buttons"] = QHBoxLayout()
+
+        self.objects[0]["mainmenu"]["new_memo_button"] = QPushButton(
+            'New memo')
         self.objects[0]["mainmenu"]["new_memo_button"].clicked.connect(
             self.__new_memo)
-        self.layouts[0]["mainmenu"].addWidget(new_memo_button)
+        self.layouts[0]["mainmenu_buttons"].addWidget(
+            self.objects[0]["mainmenu"]["new_memo_button"])
+
+        self.objects[0]["mainmenu"]["import_button"] = QPushButton(
+            'Import from web')
+        self.objects[0]["mainmenu"]["import_button"].clicked.connect(
+            self.__import_from_web)
+        self.layouts[0]["mainmenu_buttons"].addWidget(
+            self.objects[0]["mainmenu"]["import_button"])
+
+        self.layouts[0]["mainmenu"].addLayout(
+            self.layouts[0]["mainmenu_buttons"])
 
         self.frames[0]["mainmenu"].setLayout(self.layouts[0]["mainmenu"])
 
@@ -523,7 +536,12 @@ class MemoView(QFrame):
         updated_memo = self.memo_service.update(
             self.__editor_memo.id, self.__editor_memo.author.id, title, content, self.__editor_memo.date)
         if updated_memo:
-            self.__show_memo(updated_memo.id)
+            self.__set_editor_memo(updated_memo)
+            self.__set_viewer_memo(updated_memo)
+            if self.__active_screen == "viewer":
+                self.frames[0]["viewer"].hide()
+                self.frames[0]["editor"].show()
+                self.__active_screen = "editor"
 
     def __handle_new_memo(self):
         title = self.objects[0]["new_memo"]["title_edit"].text()
@@ -562,6 +580,46 @@ class MemoView(QFrame):
         self.frames[0]["new_memo"].setLayout(self.layouts[0]["new_memo"])
 
         self.frames[0]["new_memo"].exec_()
+
+    def __handle_import_from_web(self):
+        url = self.objects[0]["import_from_web"]["url_edit"].text()
+        new_memo = self.memo_service.import_from_url(self.user[0].id, url)
+        if new_memo:
+            self.__set_editor_memo(new_memo)
+
+            memo_button = QPushButton(new_memo.title)
+            memo_button.clicked.connect(partial(self.__show_memo, new_memo.id))
+            self.objects[0]["mainmenu_memos"][new_memo.id] = memo_button
+            self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
+
+            self.frames[0]["import_from_web"].done(1)
+            if self.__active_screen == "viewer":
+                self.frames[0]["viewer"].hide()
+                self.frames[0]["editor"].show()
+
+    def __import_from_web(self):
+        self.frames[0]["import_from_web"] = QDialog()
+        self.objects[0]["import_from_web"] = {}
+        self.frames[0]["import_from_web"].setWindowTitle("Import from web")
+
+        self.layouts[0]["import_from_web"] = QVBoxLayout()
+        self.objects[0]["import_from_web"]["url_label"] = QLabel("Url:")
+        self.layouts[0]["import_from_web"].addWidget(
+            self.objects[0]["import_from_web"]["url_label"])
+        self.objects[0]["import_from_web"]["url_edit"] = QLineEdit()
+        self.layouts[0]["import_from_web"].addWidget(
+            self.objects[0]["import_from_web"]["url_edit"])
+        self.objects[0]["import_from_web"]["import_button"] = QPushButton(
+            'Import')
+        self.objects[0]["import_from_web"]["import_button"].clicked.connect(
+            self.__handle_import_from_web)
+        self.layouts[0]["import_from_web"].addWidget(
+            self.objects[0]["import_from_web"]["import_button"])
+
+        self.frames[0]["import_from_web"].setLayout(
+            self.layouts[0]["import_from_web"])
+
+        self.frames[0]["import_from_web"].exec_()
 
     def __remove_memo(self):
         memo_to_be_removed = self.__editor_memo
