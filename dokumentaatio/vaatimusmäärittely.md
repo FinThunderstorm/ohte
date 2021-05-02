@@ -40,7 +40,7 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 - [x] Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2)
   - taulukkotuki ja listatuki lisätty
 - [x] Kuvien upottaminen
-- [] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 5 todo)
+- [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 6 tehty)
 - [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 5 todo)
 - [] Asetukset (vko 6 todo)
   - muistion resoluution koon vaihtaminen + tallentaminen .env-tiedostoon
@@ -58,3 +58,4 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 
 - [] MemoServiceen current user -ajattelumalli. (vko 5 todo)
 - [] Testauskattavuus 100% (vko 6 todo)
+- [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen

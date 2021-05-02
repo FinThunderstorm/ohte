@@ -1,15 +1,22 @@
 from trafilatura import fetch_url, extract
-from utils.helpers import get_time
+import os
+from utils.helpers import get_time, get_id
 from repositories.user_repository import user_repository as default_user_repository
 from repositories.memo_repository import memo_repository as default_memo_repository
+from repositories.file_repository import file_repository as default_file_repository
+from services.image_service import image_service as default_image_service
 
 
 class MemoService:
     def __init__(self,
                  memo_repository=default_memo_repository,
-                 user_repository=default_user_repository):
+                 user_repository=default_user_repository,
+                 file_repository=default_file_repository,
+                 image_service=default_image_service):
         self.memo_repository = memo_repository
         self.user_repository = user_repository
+        self.file_repository = file_repository
+        self.image_service = image_service
 
     def create(self, author_id, title=None, content=""):
         author = self.user_repository.get('id', author_id)
@@ -85,6 +92,59 @@ class MemoService:
             return saved_memo
         except ValueError:
             return None
+
+    def import_from_file(self, author_id, src):
+        try:
+            imported = self.file_repository.open_file(src)
+            if not imported:
+                raise ValueError("File was empty")
+
+            filename, file_ext = os.path.splitext(src)
+            filename = filename.split("/")
+            filename = filename[len(filename)-1]+file_ext
+
+            src = src[:src.find(filename)]
+
+            index = imported.find('![](')
+            while index != -1:
+                img_src_end = imported.find(')', index)
+                img_src = imported[index+4:img_src_end]
+
+                img_name = img_src.split('/')
+                img_name = img_name[len(img_name)-1]
+                img_name = filename + "/" + img_name
+                img_name = img_name if len(img_name) < 50 else img_name[:50]
+
+                img_src = os.path.normpath(os.path.join(src, img_src))
+
+                img = self.image_service.get('name', img_name)[0]
+                if img.author != self.user_repository.get('id', get_id(author_id)):
+                    img = None
+                if img.image != self.image_service.convert_image(img_src):
+                    img = None
+                img = img if img else self.image_service.create(
+                    author_id, img_name, img_src, 600)
+
+                img_tag = ""
+                if img:
+                    img_tag = "![]("+str(img.id)+')'
+                imported = imported[:index]+img_tag+imported[img_src_end+1:]
+
+                index = imported.find('![](', index+1)
+
+            title = "Imported from "+filename
+            title = title if len(title) < 50 else title[:50]
+
+            saved_memo = self.create(author_id, title, imported)
+            return saved_memo
+        except OSError:
+            return None
+        except ValueError:
+            return None
+
+    def export_memo(self, memo_id, src):
+        memo = self.get('id', memo_id)
+        self.file_repository.save_file(src, memo.content)
 
 
 memo_service = MemoService()

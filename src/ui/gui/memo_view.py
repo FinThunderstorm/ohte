@@ -98,10 +98,25 @@ class MemoView(QFrame):
 
         self.layouts[0]["mainmenu"].addSpacing(25)
 
+        self.objects[0]["mainmenu_memos_scroll"] = QScrollArea()
+        self.frames[0]["mainmenu_memos"] = QFrame()
+        self.objects[0]["mainmenu_memos_scroll"].setWidget(
+            self.frames[0]["mainmenu_memos"])
+        self.objects[0]["mainmenu_memos_scroll"].ensureWidgetVisible(
+            self.frames[0]["mainmenu_memos"])
+        self.objects[0]["mainmenu_memos_scroll"].setWidgetResizable(True)
+        self.objects[0]["mainmenu_memos_scroll"].setAlignment(Qt.AlignTop)
+        self.objects[0]["mainmenu_memos_scroll"].setFixedSize(
+            self.__active_width-(self.__active_width-375), self.__active_height-300)
+        self.objects[0]["mainmenu_memos_scroll"].setStyleSheet(
+            'QScrollArea { border: 0px;}')
         self.layouts[0]["mainmenu_memos"] = QVBoxLayout()
-
-        self.layouts[0]["mainmenu"].addLayout(
+        self.frames[0]["mainmenu_memos"].setLayout(
             self.layouts[0]["mainmenu_memos"])
+
+        self.layouts[0]["mainmenu"].addWidget(
+            self.objects[0]["mainmenu_memos_scroll"])
+
         self.layouts[0]["mainmenu"].addStretch()
 
         self.layouts[0]["mainmenu_buttons"] = QHBoxLayout()
@@ -114,7 +129,7 @@ class MemoView(QFrame):
             self.objects[0]["mainmenu"]["new_memo_button"])
 
         self.objects[0]["mainmenu"]["import_button"] = QPushButton(
-            'Import from web')
+            'Import from')
         self.objects[0]["mainmenu"]["import_button"].clicked.connect(
             self.__import_from_web)
         self.layouts[0]["mainmenu_buttons"].addWidget(
@@ -133,6 +148,7 @@ class MemoView(QFrame):
                 memo_button.clicked.connect(partial(self.__show_memo, memo.id))
                 self.objects[0]["mainmenu_memos"][memo.id] = memo_button
                 self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
+            self.layouts[0]["mainmenu_memos"].addStretch()
 
     def __empty_memos_from_mainmenu(self):
         for button in self.objects[0]["mainmenu_memos"].values():
@@ -165,9 +181,11 @@ class MemoView(QFrame):
         self.objects[0]["viewer"]["content_scroll"].setWidgetResizable(True)
         self.objects[0]["viewer"]["content_scroll"].ensureWidgetVisible(
             self.objects[0]["viewer"]["content_label"])
-        self.objects[0]["viewer"]["content_label"].setWordWrap(True)
+        self.objects[0]["viewer"]["content_label"].setDisabled(True)
         self.objects[0]["viewer"]["content_label"].setAlignment(Qt.AlignTop)
         self.objects[0]["viewer"]["content_scroll"].setAlignment(Qt.AlignTop)
+        self.objects[0]["viewer"]["content_label"].setFixedWidth(
+            self.__active_width-450)
         self.objects[0]["viewer"]["content_scroll"].setFixedSize(
             self.__active_width-450, self.__active_height-200)
         self.objects[0]["viewer"]["content_scroll"].setStyleSheet(
@@ -215,7 +233,8 @@ class MemoView(QFrame):
             '<h1><u>'+self.__viewer_memo.title+'</u></h1>')
         self.objects[0]["viewer"]["info_label"].setText('<p>'+self.__viewer_memo.date.strftime(
             '%a %d.%m.%Y %H:%M')+' | '+self.__viewer_memo.author.firstname+" "+self.__viewer_memo.author.lastname+'</p>')
-        self.objects[0]["viewer"]["content_label"].setText(content_in_html)
+        self.objects[0]["viewer"]["content_label"].setText(
+            content_in_html)
 
         self.objects[0]["viewer_toolbar"]["edit_button"].clicked.connect(
             partial(self.__edit_memo, self.__viewer_memo.id))
@@ -455,7 +474,7 @@ class MemoView(QFrame):
         file_location = self.objects[0]["image_selector_add"]["file_loc_edit"].text(
         )
         if name == "" or width == "" or file_location == "":
-            pass
+            return
         image = self.image_service.create(
             self.user[0].id, name, file_location, width)
         if image:
@@ -592,16 +611,40 @@ class MemoView(QFrame):
             self.objects[0]["mainmenu_memos"][new_memo.id] = memo_button
             self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
 
-            self.frames[0]["import_from_web"].done(1)
+            self.frames[0]["import_from"].done(1)
+            if self.__active_screen == "viewer":
+                self.frames[0]["viewer"].hide()
+                self.frames[0]["editor"].show()
+
+    def __handle_import_from_file(self):
+        src = self.objects[0]["import_from_file"]["src_edit"].text()
+        new_memo = self.memo_service.import_from_file(self.user[0].id, src)
+        if new_memo:
+            self.__set_editor_memo(new_memo)
+
+            memo_button = QPushButton(new_memo.title)
+            memo_button.clicked.connect(partial(self.__show_memo, new_memo.id))
+            self.objects[0]["mainmenu_memos"][new_memo.id] = memo_button
+            self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
+
+            self.frames[0]["import_from"].done(1)
             if self.__active_screen == "viewer":
                 self.frames[0]["viewer"].hide()
                 self.frames[0]["editor"].show()
 
     def __import_from_web(self):
-        self.frames[0]["import_from_web"] = QDialog()
+        self.frames[0]["import_from"] = QDialog()
+        self.objects[0]["import_from"] = {}
         self.objects[0]["import_from_web"] = {}
-        self.frames[0]["import_from_web"].setWindowTitle("Import from web")
+        self.objects[0]["import_from_file"] = {}
+        self.frames[0]["import_from"].setWindowTitle("Import from")
 
+        self.layouts[0]["import_from"] = QVBoxLayout()
+        self.objects[0]["import_from"]["tabs"] = QTabWidget()
+        self.layouts[0]["import_from"].addWidget(
+            self.objects[0]["import_from"]["tabs"])
+
+        self.frames[0]["import_from_web"] = QFrame()
         self.layouts[0]["import_from_web"] = QVBoxLayout()
         self.objects[0]["import_from_web"]["url_label"] = QLabel("Url:")
         self.layouts[0]["import_from_web"].addWidget(
@@ -619,7 +662,48 @@ class MemoView(QFrame):
         self.frames[0]["import_from_web"].setLayout(
             self.layouts[0]["import_from_web"])
 
-        self.frames[0]["import_from_web"].exec_()
+        # from file
+
+        self.frames[0]["import_from_file"] = QFrame()
+        self.layouts[0]["import_from_file"] = QGridLayout()
+        self.objects[0]["import_from_file"]["src_label"] = QLabel(
+            "File location:")
+        self.layouts[0]["import_from_file"].addWidget(
+            self.objects[0]["import_from_file"]["src_label"], 1, 0)
+        self.objects[0]["import_from_file"]["src_edit"] = QLineEdit()
+        self.layouts[0]["import_from_file"].addWidget(
+            self.objects[0]["import_from_file"]["src_edit"], 1, 1)
+        self.objects[0]["import_from_file"]["select_button"] = QPushButton(
+            'Import')
+        self.objects[0]["import_from_file"]["select_button"].clicked.connect(
+            self.__handle_import_filedialog)
+        self.layouts[0]["import_from_file"].addWidget(
+            self.objects[0]["import_from_file"]["select_button"], 1, 2)
+        self.objects[0]["import_from_file"]["import_button"] = QPushButton(
+            'Import')
+        self.objects[0]["import_from_file"]["import_button"].clicked.connect(
+            self.__handle_import_from_file)
+        self.layouts[0]["import_from_file"].addWidget(
+            self.objects[0]["import_from_file"]["import_button"], 2, 0)
+
+        self.frames[0]["import_from_file"].setLayout(
+            self.layouts[0]["import_from_file"])
+        # add tabs
+
+        self.objects[0]["import_from"]["tabs"].addTab(
+            self.frames[0]["import_from_web"], "Web")
+        self.objects[0]["import_from"]["tabs"].addTab(
+            self.frames[0]["import_from_file"], "File")
+
+        self.frames[0]["import_from"].setLayout(self.layouts[0]["import_from"])
+        self.frames[0]["import_from"].exec_()
+
+    def __handle_import_filedialog(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            self.frames[0]["import_from_file"], "Add image", "~/", "Markdown files (*.md)")
+
+        self.objects[0]["import_from_file"]["src_edit"].setText(
+            filename)
 
     def __remove_memo(self):
         memo_to_be_removed = self.__editor_memo
