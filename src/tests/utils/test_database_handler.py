@@ -1,11 +1,15 @@
 import unittest
 from mongoengine import ConnectionFailure
 from pymongo.errors import ConfigurationError
-from utils.config import database_uri
+from utils.config import Config
 from utils.database_handler import connect_database, connect_test_database, disconnect_database
+from services.file_service import file_service
 
 
 class TestDatabaseHandler(unittest.TestCase):
+    def setUp(self):
+        self.config = Config(file_service)
+
     def tearDown(self):
         disconnect_database()
 

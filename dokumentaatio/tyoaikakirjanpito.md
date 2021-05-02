@@ -27,7 +27,8 @@
 | 25.4      | 7h     | Kuvatuki memoihin ja sen tarvitsemat sovelluslogiikat                                 |
 | 26.4-27.4 | 2h     | Uusien kuvien lisäämisen mahdollistaminen                                             |
 | 28.4-29.4 | 2h     | Verkkosisällön tuominen                                                               |
-| Yhteensä  | 63,5h  |                                                                                       |
+| 1.5-2.5   | 6h     | Paremman config-määrittelyn kirjoitus ja bugikorjauksia                               |
+| Yhteensä  | 69,5h  |                                                                                       |
 
 ## Todo-lista
 
