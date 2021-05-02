@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 from markdown2 import markdown
 from functools import partial
+import sys
 
 
 class SetupView(QDialog):
@@ -11,7 +12,7 @@ class SetupView(QDialog):
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.__active_width = 400
-        self.__active_height = 600
+        self.__active_height = 300
 
         self.objects = objects if objects else {}
         self.layouts = layouts if layouts else {}
@@ -22,7 +23,6 @@ class SetupView(QDialog):
         self.layout = QGridLayout()
 
     def __initialize(self):
-        self.setWindowTitle('Settings')
         width_pos = self.__screen_width//2 - self.__active_width//2
         height_pos = self.__screen_height//2 - self.__active_height//2
 
@@ -31,7 +31,7 @@ class SetupView(QDialog):
 
         self.setLayout(self.layout)
 
-    def __initalize_shared_objects(self):
+    def __initialize_shared_objects(self):
         self.__initialize()
         self.objects[0]["settings_view"] = {}
 
@@ -76,28 +76,32 @@ class SetupView(QDialog):
         self.objects[0]["settings_view"]["db_pw_label"] = QLabel(
             'Database password:')
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["db_pw_label"], 4, 0)
+            self.objects[0]["settings_view"]["db_pw_label"], 5, 0)
 
         self.objects[0]["settings_view"]["db_pw_edit"] = QLineEdit()
         self.objects[0]["settings_view"]["db_pw_edit"].setEchoMode(
             QLineEdit.Password)
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["db_pw_edit"], 4, 1)
+            self.objects[0]["settings_view"]["db_pw_edit"], 5, 1)
 
         self.objects[0]["settings_view"]["save_button"] = QPushButton('Save')
         self.objects[0]["settings_view"]["save_button"].clicked.connect(
             self.__handle_settings_save)
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["save_button"], 5, 0)
+            self.objects[0]["settings_view"]["save_button"], 6, 0)
 
         self.objects[0]["settings_view"]["cancel_button"] = QPushButton(
             'Cancel')
         self.objects[0]["settings_view"]["cancel_button"].clicked.connect(
             self.__close)
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["cancel_button"], 5, 1)
+            self.objects[0]["settings_view"]["cancel_button"], 6, 1)
 
     def run(self):
+        self.exec_()
+
+    def run_standalone(self):
+        self.initialize_first_time()
         self.exec_()
 
     def __close(self):
@@ -105,6 +109,7 @@ class SetupView(QDialog):
 
     def initialize_first_time(self):
         self.__initialize_shared_objects()
+        self.__load_current_configuration()
 
     def initialize_settings(self):
         self.__load_current_configuration()
@@ -125,9 +130,11 @@ class SetupView(QDialog):
             self.config.set_value(
                 "res_format", self.objects[0]["settings_view"]["resolution_selector"].currentText())
             self.config.set_value(
-                "db_user", self.objects[0]["settings_view"]["db_user_edit"].text())
-            self.config.set_value(
-                "db_password", self.objects[0]["settings_view"]["db_pw_edit"].text())
+                "db_username", self.objects[0]["settings_view"]["db_user_edit"].text())
+            db_password = self.objects[0]["settings_view"]["db_pw_edit"].text()
+            if db_password != "":
+                self.config.set_value(
+                    "db_password", db_password)
         except ValueError:
             return
 
@@ -135,16 +142,16 @@ class SetupView(QDialog):
         self.__close()
 
     def __load_current_configuration(self):
-        configs = self.config.check()
+        configs = self.config.get_all()
 
         if not configs:
             self.__handle_load_error()
             self.__close()
 
         self.objects[0]["settings_view"]["resolution_selector"].setCurrentIndex(
-            configs["res_index"])
+            int(configs["RES_INDEX"]))
         self.objects[0]["settings_view"]["db_user_edit"].setText(
-            configs["db_user"])
+            configs["DB_USERNAME"])
 
     def __load_current_user(self):
         pass

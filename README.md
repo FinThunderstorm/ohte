@@ -14,25 +14,19 @@ Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä usea
 
 ### Asentaminen
 
-1. Alusta .env tiedosto uudelleennimeämällä _.examle.env_ muotoon _.env_ ja täydennä tietokannan käyttäjätiedot korvaamalla _username_ ja _password_ pyytämällä Telegramista _@finthunderstorm_. Tiedosto näyttää lopulta seuraavalta:
-
-```
-DATABASE_URI=mongodb+srv://username:password@ohte.bu0r9.mongodb.net/muistio?retryWrites=true&w=majority
-```
-
-2. Asenna sovelluksen tarvitsemat kirjastot komennolla:
+1. Asenna sovelluksen tarvitsemat kirjastot komennolla:
 
 ```bash
 poetry install
 ```
 
-3. Käynnistä sovellus:
+2. Käynnistä sovellus:
 
 ```bash
 poetry run invoke start
 ```
 
-**Huom!** Jos osa riveistä tulostuu päällekäin tai tekstiä ei voi pyyhkiä, niin Ongelman voi kiertää käynnistämällä ohjelman komennolla `python3 src/index.py`. Poetryn invokella suorittaminen jostain syystä vaikuttaa input-metodin toimintaan.
+3. Täytä asetustiedot avautuvaan ikkunaan. Tarvittavat tietokannan käyttäjätiedot, _username_ ja _password_, saat pyytämällä Telegramista _@finthunderstorm_.
 
 ### Komennot
 
