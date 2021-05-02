@@ -1,5 +1,5 @@
 from utils.helpers import get_empty_memo, get_id
-from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
+from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QTextBrowser, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 from markdown2 import markdown
@@ -111,8 +111,12 @@ class MemoView(QFrame):
         self.objects[0]["mainmenu_memos_scroll"].setStyleSheet(
             'QScrollArea { border: 0px;}')
         self.layouts[0]["mainmenu_memos"] = QVBoxLayout()
-        self.frames[0]["mainmenu_memos"].setLayout(
+        self.layouts[0]["mainmenu_memos_outer"] = QVBoxLayout()
+        self.layouts[0]["mainmenu_memos_outer"].addLayout(
             self.layouts[0]["mainmenu_memos"])
+        self.layouts[0]["mainmenu_memos_outer"].addStretch()
+        self.frames[0]["mainmenu_memos"].setLayout(
+            self.layouts[0]["mainmenu_memos_outer"])
 
         self.layouts[0]["mainmenu"].addWidget(
             self.objects[0]["mainmenu_memos_scroll"])
@@ -144,11 +148,12 @@ class MemoView(QFrame):
         memos = self.memo_service.get('author', self.user[0])
         if memos:
             for memo in memos:
-                memo_button = QPushButton(memo.title)
-                memo_button.clicked.connect(partial(self.__show_memo, memo.id))
-                self.objects[0]["mainmenu_memos"][memo.id] = memo_button
-                self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
-            self.layouts[0]["mainmenu_memos"].addStretch()
+                self.objects[0]["mainmenu_memos"][memo.id] = QPushButton(
+                    memo.title)
+                self.objects[0]["mainmenu_memos"][memo.id].clicked.connect(
+                    partial(self.__show_memo, memo.id))
+                self.layouts[0]["mainmenu_memos"].addWidget(
+                    self.objects[0]["mainmenu_memos"][memo.id])
 
     def __empty_memos_from_mainmenu(self):
         for button in self.objects[0]["mainmenu_memos"].values():
@@ -159,37 +164,29 @@ class MemoView(QFrame):
         self.objects[0]["viewer"] = {}
         self.layouts[0]["viewer"] = QVBoxLayout()
         self.frames[0]["viewer"].setLayout(self.layouts[0]["viewer"])
-        self.frames[0]["viewer"].setFixedWidth(self.__active_width-400)
+        self.frames[0]["viewer"].setFixedWidth(self.__active_width-450)
 
         self.__initialize_viewer_toolbar()
         self.__viewer_memo = None
 
         self.objects[0]["viewer"]["title_label"] = QLabel()
         self.objects[0]["viewer"]["info_label"] = QLabel()
-        self.objects[0]["viewer"]["content_label"] = QLabel()
-        self.objects[0]["viewer"]["content_scroll"] = QScrollArea()
-        self.objects[0]["viewer"]["content_scroll"].setWidget(
-            self.objects[0]["viewer"]["content_label"])
+        self.objects[0]["viewer"]["content_label"] = QTextBrowser()
 
         self.layouts[0]["viewer"].addWidget(
             self.objects[0]["viewer"]["title_label"])
         self.layouts[0]["viewer"].addWidget(
             self.objects[0]["viewer"]["info_label"])
         self.layouts[0]["viewer"].addWidget(
-            self.objects[0]["viewer"]["content_scroll"])
-
-        self.objects[0]["viewer"]["content_scroll"].setWidgetResizable(True)
-        self.objects[0]["viewer"]["content_scroll"].ensureWidgetVisible(
             self.objects[0]["viewer"]["content_label"])
-        self.objects[0]["viewer"]["content_label"].setDisabled(True)
+
         self.objects[0]["viewer"]["content_label"].setAlignment(Qt.AlignTop)
-        self.objects[0]["viewer"]["content_scroll"].setAlignment(Qt.AlignTop)
-        self.objects[0]["viewer"]["content_label"].setFixedWidth(
-            self.__active_width-450)
-        self.objects[0]["viewer"]["content_scroll"].setFixedSize(
-            self.__active_width-450, self.__active_height-200)
-        self.objects[0]["viewer"]["content_scroll"].setStyleSheet(
-            'QScrollArea { border: 0px;}')
+
+        self.objects[0]["viewer"]["content_label"].setFixedSize(
+            self.__active_width-475, self.__active_height-200)
+        self.objects[0]["viewer"]["content_label"].setStyleSheet(
+            'QTextEdit { border: 0px; background-color: transparent;}')
+
         self.layouts[0]["viewer"].addStretch()
         self.layouts[0]["viewer"].addLayout(self.layouts[0]["viewer_toolbar"])
 
@@ -470,11 +467,12 @@ class MemoView(QFrame):
     def __handle_add_image_to_db(self):
         self.objects[0]["image_selector_add"]["error_label"].setText('')
         name = self.objects[0]["image_selector_add"]["name_edit"].text()
-        width = int(self.objects[0]["image_selector_add"]["width_edit"].text())
+        width = self.objects[0]["image_selector_add"]["width_edit"].text()
         file_location = self.objects[0]["image_selector_add"]["file_loc_edit"].text(
         )
         if name == "" or width == "" or file_location == "":
             return
+        width = int(width)
         image = self.image_service.create(
             self.user[0].id, name, file_location, width)
         if image:
@@ -522,45 +520,56 @@ class MemoView(QFrame):
         self.objects[0]["viewer_toolbar"]["edit_button"] = QPushButton('Edit')
         self.objects[0]["viewer_toolbar"]["remove_button"] = QPushButton(
             'Remove')
+        self.objects[0]["viewer_toolbar"]["export_button"] = QPushButton(
+            'Export')
 
         self.objects[0]["viewer_toolbar"]["remove_button"].clicked.connect(
             self.__remove_memo)
+        self.objects[0]["viewer_toolbar"]["export_button"].clicked.connect(
+            self.__export_memo)
 
         self.layouts[0]["viewer_toolbar"].addWidget(
             self.objects[0]["viewer_toolbar"]["edit_button"])
         self.layouts[0]["viewer_toolbar"].addWidget(
             self.objects[0]["viewer_toolbar"]["remove_button"])
         self.layouts[0]["viewer_toolbar"].addStretch()
+        self.layouts[0]["viewer_toolbar"].addWidget(
+            self.objects[0]["viewer_toolbar"]["export_button"])
+
+    def __export_memo(self):
+        filename, _ = QFileDialog.getSaveFileName(
+            self.frames[0]["viewer"], "Select export location", "~/")
+        src_folder = filename.split('/')
+        save_name = src_folder[len(src_folder)-1]
+        if ".md" not in save_name:
+            filename += ".md"
+        self.memo_service.export_memo(self.__viewer_memo.id, filename)
 
     def __show_memo(self, memo_id):
-        if self.__active_screen == "editor":
-            self.frames[0]["editor"].hide()
-            self.frames[0]["viewer"].show()
-            self.__active_screen = "viewer"
         memo = self.memo_service.get("id", memo_id)
         self.__set_viewer_memo(memo)
-        if not self.__editor_memo:
-            self.__set_editor_memo(memo)
+        self.frames[0]["editor"].hide()
+        self.frames[0]["viewer"].show()
+        self.__active_screen = "viewer"
 
     def __edit_memo(self, memo_id):
-        if self.__active_screen == "viewer":
-            self.frames[0]["viewer"].hide()
-            self.frames[0]["editor"].show()
-            self.__active_screen = "editor"
         self.__set_editor_memo(self.__viewer_memo)
+        self.frames[0]["viewer"].hide()
+        self.frames[0]["editor"].show()
+        self.__active_screen = "editor"
 
     def __save_memo(self):
         title = self.objects[0]["editor"]["title_edit"].text()
         content = self.objects[0]["editor"]["content_edit"].toPlainText()
+        if title == "" or len(title) > 50:
+            return
         updated_memo = self.memo_service.update(
             self.__editor_memo.id, self.__editor_memo.author.id, title, content, self.__editor_memo.date)
         if updated_memo:
-            self.__set_editor_memo(updated_memo)
             self.__set_viewer_memo(updated_memo)
-            if self.__active_screen == "viewer":
-                self.frames[0]["viewer"].hide()
-                self.frames[0]["editor"].show()
-                self.__active_screen = "editor"
+            self.frames[0]["editor"].hide()
+            self.frames[0]["viewer"].show()
+            self.__active_screen = "viewer"
 
     def __handle_new_memo(self):
         title = self.objects[0]["new_memo"]["title_edit"].text()

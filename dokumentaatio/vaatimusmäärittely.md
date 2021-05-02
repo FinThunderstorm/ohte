@@ -41,16 +41,16 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
   - taulukkotuki ja listatuki lisätty
 - [x] Kuvien upottaminen
 - [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 6 tehty)
-- [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 5 todo)
+- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 6 tehty)
 - [] Asetukset (vko 6 todo)
   - muistion resoluution koon vaihtaminen + tallentaminen .env-tiedostoon
   - muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen.
   - käyttäjän poistaminen ja tietojen päivittäminen
-- [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen. (vko 6)
-- [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö (vko 7)
-- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 6 tehty)
-- [] virheilmoitusten parantaminen & lisääminen (vko 5-7 todo)
-- [] Lajittelumahdollisuudet (vko 7)
+- [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 7 todo - prio 1)
+- [] virheilmoitusten parantaminen & lisääminen (vko 7 todo - prio 1)
+- [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö (vko 7 todo - prio 2)
+- [] Lajittelumahdollisuudet (vko 7 todo - prio 2)
+- [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen. (vko 7 todo - prio 3)
 - [] Käyttäjähallinta
 - [] Muistikirjan jakaminen toiselle käyttäjälle
 
@@ -59,3 +59,7 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 - [] MemoServiceen current user -ajattelumalli. (vko 5 todo)
 - [] Testauskattavuus 100% (vko 6 todo)
 - [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
+
+## Mahdollisia kehittämiskulmia tulevaisuuteen
+
+- Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]
