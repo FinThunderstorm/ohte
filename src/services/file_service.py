@@ -23,7 +23,7 @@ class FileService:
 
         Returns:
             string: content of opened file and if file repository raises problems
-                    when trying to open file, returns None. 
+                    when trying to open file, returns None.
         """
         try:
             content = self.file_repository.open_file(src, byte)

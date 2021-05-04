@@ -5,13 +5,13 @@ class User(Document):
     """Class for user objects. Inherits from mongonengines document class
     by giving all functions from that. Class defines types for database.
 
-    firstname is required string, limited length 25 characters. 
+    firstname is required string, limited length 25 characters.
     Holds user's firstname.
 
-    lastname is required string, limited length 25 characters. 
+    lastname is required string, limited length 25 characters.
     Holds user's lastname.
 
-    username is required string, limited length 40 characters. 
+    username is required string, limited length 40 characters.
     Holds user's username. Needs to be unique, checked in database
     when creating new user.
 
