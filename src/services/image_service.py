@@ -8,7 +8,9 @@ from repositories.file_repository import file_repository as default_file_reposit
 
 class ImageService:
     def __init__(self, image_repository=default_image_repository,
-                 user_repository=default_user_repository, memo_repository=default_memo_repository, file_repository=default_file_repository):
+                 user_repository=default_user_repository,
+                 memo_repository=default_memo_repository,
+                 file_repository=default_file_repository):
         self.image_repository = image_repository
         self.user_repository = user_repository
         self.memo_repository = memo_repository

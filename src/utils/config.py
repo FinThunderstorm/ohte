@@ -1,10 +1,5 @@
-from os import getenv, path
-from dotenv import load_dotenv, dotenv_values
-
-# env_location = path.join(path.dirname(__file__), '..', '..', '.env')
-# load_dotenv(env_location)
-
-# database_uri = getenv("DATABASE_URI")
+from os import path
+from dotenv import dotenv_values
 
 
 class Config:
@@ -37,8 +32,9 @@ class Config:
         file_content = ""
         for setting in self.__configs:
             value = self.__configs[setting.upper()]
-            if setting.upper() in ("DATABASE_URI"):
-                value = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_SERVER}/${DB_NAME}?retryWrites=true&w=majority"
+            if setting.upper() == "DATABASE_URI":
+                value = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}" \
+                    + "@${DB_SERVER}/${DB_NAME}?retryWrites=true&w=majority"
             file_content += setting.upper()+"="+str(value)+"\n"
         self.__file_service.save_file(self.__env_location, file_content)
 
@@ -50,4 +46,5 @@ class Config:
         self.__configs["DB_PASSWORD"] = ""
         self.__configs["DB_SERVER"] = "ohte.bu0r9.mongodb.net"
         self.__configs["DB_NAME"] = "muistio"
-        self.__configs["DATABASE_URI"] = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_SERVER}/${DB_NAME}?retryWrites=true&w=majority"
+        self.__configs["DATABASE_URI"] = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}" \
+            + "@${DB_SERVER}/${DB_NAME}?retryWrites=true&w=majority"

@@ -42,10 +42,11 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 - [x] Kuvien upottaminen
 - [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 6 tehty)
 - [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 6 tehty)
-- [] Asetukset (vko 6 todo)
-  - muistion resoluution koon vaihtaminen + tallentaminen .env-tiedostoon
-  - muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen.
-  - käyttäjän poistaminen ja tietojen päivittäminen
+- [] Asetukset (vko 7 todo)
+  - [x] muistion resoluution koon tallentaminen .env-tiedostoon (vko 6 tehty)
+  - [x] muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen. (vko 6 tehty)
+  - käyttäjän poistaminen ja tietojen päivittäminen (vko 7 todo)
+  - resoluution koon käsittely .env-tiedoston pohjalta (vko 7 todo)
 - [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 7 todo - prio 1)
 - [] virheilmoitusten parantaminen & lisääminen (vko 7 todo - prio 1)
 - [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö (vko 7 todo - prio 2)
@@ -56,8 +57,8 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 
 ## Muut todot
 
-- [] MemoServiceen current user -ajattelumalli. (vko 5 todo)
-- [] Testauskattavuus 100% (vko 6 todo)
+- [] MemoServiceen current user -ajattelumalli. (vko 7 todo)
+- [] Testauskattavuus 100% (vko 7 todo)
 - [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
 
 ## Mahdollisia kehittämiskulmia tulevaisuuteen

@@ -1,5 +1,5 @@
-from trafilatura import fetch_url, extract
 import os
+from trafilatura import fetch_url, extract
 from utils.helpers import get_time, get_id
 from repositories.user_repository import user_repository as default_user_repository
 from repositories.memo_repository import memo_repository as default_memo_repository
