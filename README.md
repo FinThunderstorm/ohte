@@ -6,11 +6,17 @@ Kurssisuoritus Helsingin yliopiston [**Ohjelmistotekniikan**](https://ohjelmisto
 
 Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä useammalla eri laitteella verkon ylitse.
 
+### Releases
+
+- [Viikon 5 release](https://github.com/FinThunderstorm/ohte/releases/tag/viikko5)
+- [Viikon 6 release](https://github.com/FinThunderstorm/ohte/releases/tag/viikko6)
+
 ### Dokumentaatio
 
 - [Vaatimusmäärittely](./dokumentaatio/vaatimusmäärittely.md)
 - [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)
 - [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuuri.md)
+- [Käyttöohje](./dokumentaatio/käyttöohje.md)
 
 ### Asentaminen
 
