@@ -15,8 +15,8 @@ class UserRepository:
                   username as str, password as encrypted str.
 
         Returns:
-            User: returns created User with id assigned by the database and none if given
-                  username is not unique.
+            Union(User, None): returns created User with id assigned by the database and none if
+                               given username is not unique.
         """
         try:
             new_user = User(
@@ -38,8 +38,8 @@ class UserRepository:
             user: user object that is going to be saved
 
         Returns:
-            User: returns updated user object with same values as database has after save and
-                  none if username is not unique.
+            Union(User, None): returns updated user object with same values as database
+                               has after save and none if username is not unique.
         """
         try:
             updated_user = user.save()

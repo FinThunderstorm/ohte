@@ -2,7 +2,23 @@ from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QGridLayout, QVBoxLa
 
 
 class LoginView(QFrame):
+    """LoginView handles user login and user creation parts of GUI.
+
+    Args:
+        QFrame: imported from PyQt5.QtWidgets
+    """
+
     def __init__(self, screen, user_service, user, objects, layouts, frames):
+        """Constructor for preparing the LoginView.
+
+        Args:
+            screen: available screen width and height
+            user_service: service handler for users
+            user: ref to current logged user in list.
+            objects: shared dict between views holding each others objects
+            layouts: shared dict between views holding each others layouts
+            frames: shared dict between views holding each others frames
+        """
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.user_service = user_service
@@ -16,6 +32,8 @@ class LoginView(QFrame):
         self.__user = user
 
     def initialize(self):
+        """initialize is used to build the view up.
+        """
         self.__initialize_login()
         self.__initialize_create_user()
 
@@ -218,4 +236,6 @@ class LoginView(QFrame):
         self.objects[0]["create_new_user"]["password_edit"].setText('')
 
     def run(self):
+        """run is used to show this part of GUI.
+        """
         self.show()

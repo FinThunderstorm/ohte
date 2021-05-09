@@ -49,18 +49,14 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
   - resoluution koon käsittely .env-tiedoston pohjalta (vko 7 todo)
 - [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 7 todo - prio 1)
 - [] virheilmoitusten parantaminen & lisääminen (vko 7 todo - prio 1)
-- [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö (vko 7 todo - prio 2)
-- [] Lajittelumahdollisuudet (vko 7 todo - prio 2)
-- [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen. (vko 7 todo - prio 3)
+
+## Kurssin jälkeisen tulevaisuuden kehittämismahdollisuuksia
+
+- [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
+- [] Lajittelumahdollisuudet
+- [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
 - [] Käyttäjähallinta
 - [] Muistikirjan jakaminen toiselle käyttäjälle
-
-## Muut todot
-
-- [] MemoServiceen current user -ajattelumalli. (vko 7 todo)
-- [] Testauskattavuus 100% (vko 7 todo)
+- [] MemoServiceen current user -ajattelumalli laajemmin.
 - [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
-
-## Mahdollisia kehittämiskulmia tulevaisuuteen
-
-- Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]
+- [] Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]

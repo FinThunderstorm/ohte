@@ -7,12 +7,28 @@ from functools import partial
 
 
 class MemoView(QFrame):
-    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames, app):
+    """MemoView handles viewing and editing memos in GUI.
+
+    Args:
+        QFrame: imported from PyQt5.QtWidgets
+    """
+
+    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames):
+        """Constructor for preparing the MemoView.
+
+        Args:
+            screen: available screen width and height
+            memo_service: service handler for memos
+            image_service: service handler for images
+            user: ref to current logged user in list.
+            objects: shared dict between views holding each others objects
+            layouts: shared dict between views holding each others layouts
+            frames: shared dict between views holding each others frames
+        """
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.__active_width = 1650 if self.__screen_width > 1650 else self.__screen_width
         self.__active_height = 1050 if self.__screen_height > 1050 else self.__screen_height
-        # self.setFixedWidth(self.__active_width)
         self.setFixedSize(self.__active_width, self.__active_height)
 
         self.memo_service = memo_service
@@ -25,26 +41,16 @@ class MemoView(QFrame):
         self.user = user
         self.memos = []
         self.testing_memo = get_empty_memo()
-        self.__app = app
-
-        self.main_menu_handlers = {
-            "show_memo": "toot",
-        }
-        self.editor_handlers = {
-            "edit_memo": "toot",
-        }
-        self.viewer_handlers = {}
 
         self.layout = QGridLayout()
-        self.__active_screen = 'viewer'
         self.__extended_menu = 'hidden'
-        self.__viewer_state = 'hidden'
-        self.__editor_state = 'hidden'
 
         self.__viewer_memo = None if len(self.memos) > 0 else get_empty_memo()
         self.__editor_memo = None if len(self.memos) > 0 else get_empty_memo()
 
     def initialize(self):
+        """initialize is used to build the view up.
+        """
         self.__initialize_viewer()
         self.__initialize_editor()
         self.__initialize_mainmenu()
@@ -70,12 +76,10 @@ class MemoView(QFrame):
         self.setLayout(self.layout)
 
     def run(self):
+        """run is used to show this part of GUI.
+        """
         self.show()
-
         self.__update_memos_into_mainmenu()
-
-        # self.__set_viewer_memo(self.testing_memo)
-        # self.__set_editor_memo(self.testing_memo)
 
     def __initialize_mainmenu(self):
         self.frames[0]["mainmenu"] = QFrame()
@@ -237,7 +241,6 @@ class MemoView(QFrame):
             partial(self.__edit_memo, self.__viewer_memo.id))
 
         self.frames[0]["viewer"].show()
-        self.__viewer_state = "shown"
 
     def __initialize_editor(self):
         self.objects[0]["editor"] = {}
@@ -508,10 +511,8 @@ class MemoView(QFrame):
         self.frames[0]["image_selector"].done(1)
 
     def __cancel_edit(self):
-        if self.__active_screen == "editor":
-            self.frames[0]["editor"].hide()
-            self.frames[0]["viewer"].show()
-            self.__active_screen = "viewer"
+        self.frames[0]["editor"].hide()
+        self.frames[0]["viewer"].show()
 
     def __initialize_viewer_toolbar(self):
         self.objects[0]["viewer_toolbar"] = {}
@@ -550,13 +551,11 @@ class MemoView(QFrame):
         self.__set_viewer_memo(memo)
         self.frames[0]["editor"].hide()
         self.frames[0]["viewer"].show()
-        self.__active_screen = "viewer"
 
     def __edit_memo(self, memo_id):
         self.__set_editor_memo(self.__viewer_memo)
         self.frames[0]["viewer"].hide()
         self.frames[0]["editor"].show()
-        self.__active_screen = "editor"
 
     def __save_memo(self):
         title = self.objects[0]["editor"]["title_edit"].text()
@@ -569,7 +568,6 @@ class MemoView(QFrame):
             self.__set_viewer_memo(updated_memo)
             self.frames[0]["editor"].hide()
             self.frames[0]["viewer"].show()
-            self.__active_screen = "viewer"
 
     def __handle_new_memo(self):
         title = self.objects[0]["new_memo"]["title_edit"].text()
@@ -583,9 +581,8 @@ class MemoView(QFrame):
             self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
 
             self.frames[0]["new_memo"].done(1)
-            if self.__active_screen == "viewer":
-                self.frames[0]["viewer"].hide()
-                self.frames[0]["editor"].show()
+            self.frames[0]["viewer"].hide()
+            self.frames[0]["editor"].show()
 
     def __new_memo(self):
         self.frames[0]["new_memo"] = QDialog()
@@ -621,9 +618,8 @@ class MemoView(QFrame):
             self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
 
             self.frames[0]["import_from"].done(1)
-            if self.__active_screen == "viewer":
-                self.frames[0]["viewer"].hide()
-                self.frames[0]["editor"].show()
+            self.frames[0]["viewer"].hide()
+            self.frames[0]["editor"].show()
 
     def __handle_import_from_file(self):
         src = self.objects[0]["import_from_file"]["src_edit"].text()
@@ -637,9 +633,8 @@ class MemoView(QFrame):
             self.layouts[0]["mainmenu_memos"].addWidget(memo_button)
 
             self.frames[0]["import_from"].done(1)
-            if self.__active_screen == "viewer":
-                self.frames[0]["viewer"].hide()
-                self.frames[0]["editor"].show()
+            self.frames[0]["viewer"].hide()
+            self.frames[0]["editor"].show()
 
     def __import_from_web(self):
         self.frames[0]["import_from"] = QDialog()
@@ -715,9 +710,7 @@ class MemoView(QFrame):
             filename)
 
     def __remove_memo(self):
-        memo_to_be_removed = self.__editor_memo
-        if self.__active_screen == "viewer":
-            memo_to_be_removed = self.__viewer_memo
+        memo_to_be_removed = self.__viewer_memo
 
         self.frames[0]["remove_memo"] = QDialog()
         self.objects[0]["remove_memo"] = {}
@@ -756,15 +749,9 @@ class MemoView(QFrame):
             self.objects[0]["mainmenu_memos"][memo_to_be_removed.id].setParent(
                 None)
             self.frames[0]["viewer"].hide()
-            self.__viewer_state = "hidden"
             self.objects[0]["viewer"]["title_label"].setText('')
             self.objects[0]["viewer"]["info_label"].setText('')
             self.objects[0]["viewer"]["content_label"].setText('')
-            # if self.__active_screen == "editor":
-            #     self.__editor_memo = None
-            #     self.frames[0]["editor"].hide()
-            #     self.frames[0]["viewer"].show()
-            #     self.__active_screen = "viewer"
 
         self.frames[0]["remove_memo"].done(1)
 
@@ -800,9 +787,7 @@ class MemoView(QFrame):
         self.__empty_memos_from_mainmenu()
 
         self.frames[0]["viewer"].hide()
-        self.__viewer_state = "hidden"
         self.frames[0]["editor"].hide()
-        self.__editor_state = "hidden"
 
         self.frames[0]["extended_menu"].hide()
         self.__extended_menu = "hidden"

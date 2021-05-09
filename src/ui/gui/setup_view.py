@@ -1,14 +1,24 @@
-from utils.helpers import get_empty_memo, get_id
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame, QComboBox
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIntValidator
-from markdown2 import markdown
-from functools import partial
-import sys
 
 
 class SetupView(QDialog):
+    """SetupView handles viewing and editing settings in GUI.
+
+    Args:
+        QDialog: imported from PyQt5.QtWidgets
+    """
+
     def __init__(self, screen, objects, layouts, frames, config):
+        """[summary]
+
+        Args:
+            screen: available screen width and height
+            objects: shared dict between views holding each others objects
+            layouts: shared dict between views holding each others layouts
+            frames: shared dict between views holding each others frames
+            config: apps configuration object
+        """
         super().__init__()
         self.__screen_width, self.__screen_height = screen
         self.__active_width = 400
@@ -98,20 +108,25 @@ class SetupView(QDialog):
             self.objects[0]["settings_view"]["cancel_button"], 6, 1)
 
     def run(self):
+        """run is used to show settings view
+        """
+        self.__initialize_settings()
         self.exec_()
 
     def run_standalone(self):
-        self.initialize_first_time()
+        """run_standalone is used to show settings view for the first time.
+        """
+        self.__initialize_first_time()
         self.exec_()
 
     def __close(self):
         self.done(1)
 
-    def initialize_first_time(self):
+    def __initialize_first_time(self):
         self.__initialize_shared_objects()
         self.__load_current_configuration()
 
-    def initialize_settings(self):
+    def __initialize_settings(self):
         self.__load_current_configuration()
         self.__initalize_shared_objects()
 

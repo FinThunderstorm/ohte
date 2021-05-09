@@ -8,16 +8,23 @@ from ui.gui.gui import GUI
 
 
 def main():
+    """main is used for starting muistio software.
+    """
     config = Config(file_service)
 
     gui = GUI(config, memo_service, user_service,
               image_service, file_service)
 
-    conn = connect_database(config.get('DATABASE_URI'))
+    if config.initialized_first_time:
+        gui.first_time()
 
+    conn = connect_database(config.get('DATABASE_URI'))
     if conn:
         gui.start()
-        gui.run()
+    else:
+        gui.error('No connection established. Check your credentials.' +
+                  '\n\n After saving settings, relaunch the app.')
+        gui.first_time()
 
     disconnect_database()
 
