@@ -857,7 +857,7 @@ class MemoView(QFrame):
         self.objects[0]["extended_menu"]["logout_button"] = QPushButton(
             'Log out')
         self.objects[0]["extended_menu"]["logout_button"].clicked.connect(
-            self.__handle_logout)
+            self.handle_logout)
         self.layouts[0]["extended_menu"].addWidget(
             self.objects[0]["extended_menu"]["logout_button"])
         self.objects[0]["extended_menu"]["settings_button"] = QPushButton(
@@ -872,7 +872,7 @@ class MemoView(QFrame):
 
         self.frames[0]["extended_menu"].hide()
 
-    def __handle_logout(self):
+    def handle_logout(self):
         self.user[0] = None
         self.__empty_memos_from_mainmenu()
 

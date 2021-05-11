@@ -2,17 +2,17 @@
 
 ## Tarkoitus
 
-Sovelluksen on tarkoitus toimia käyttäjän omana muistikirjana useammmalla laitteella verkon ylitse. Muistikirjat ovat yksilöllisiä ja jokaisella käyttäjällä on oma muistikirja.
+Sovelluksen tarkoitus on toimia käyttäjän muistikirjana. Käyttäjä voi lisätä, katsella tai muokata muistioita. Käyttäjä voi myös tuoda tiedostosta Markdown-muotoisia tiedostoja tai verkkosivuja haluamastaan verkko-osoitteesta. Käyttäjä voi lisätä valokuvia muistioihin.
 
 ## Käyttäjät
 
-Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peruskäyttäjiä - tilannetta tarkastellaan projektin edetessä uudelleen.
+Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peruskäyttäjiä. Peruskäyttäjä voi hallita sovelluksella omia tietojaan.
 
 ## "Tech stack"
 
 - Python 3.6 tuki
   - PyQt5 -graafinen kirjasto
-- MongoDB -tietokanta taustalla
+- MongoDB -tietokanta taustalla ulkoisella palvelimella.
 
 ## Käyttöliittymähahmotelma
 
@@ -40,23 +40,26 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 - [x] Markdown-muotoilulle tuki käyttäen [markdown2-kirjastoa](https://github.com/trentm/python-markdown2)
   - taulukkotuki ja listatuki lisätty
 - [x] Kuvien upottaminen
-- [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja (vko 6 tehty)
-- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla (vko 6 tehty)
+- [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja
+- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla
 - [] Asetukset (vko 7 todo)
-  - [x] muistion resoluution koon tallentaminen .env-tiedostoon (vko 6 tehty)
-  - [x] muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen. (vko 6 tehty)
-  - käyttäjän poistaminen ja tietojen päivittäminen (vko 7 todo)
-  - resoluution koon käsittely .env-tiedoston pohjalta (vko 7 todo)
-- [] Tyylittely, vakiotyyli tarvitsee parannusta (vko 7 todo - prio 1)
+
+  - [x] muistion resoluution koon tallentaminen .env-tiedostoon
+  - [x] muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen.
+  - [x] käyttäjän poistaminen ja tietojen päivittäminen
+  - [x] resoluution koon käsittely .env-tiedoston pohjalta
+
 - [] virheilmoitusten parantaminen & lisääminen (vko 7 todo - prio 1)
 
 ## Kurssin jälkeisen tulevaisuuden kehittämismahdollisuuksia
 
+- [] Tyylittely, vakiotyyli tarvitsee parannusta
 - [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
 - [] Lajittelumahdollisuudet
 - [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
 - [] Käyttäjähallinta
 - [] Muistikirjan jakaminen toiselle käyttäjälle
 - [] MemoServiceen current user -ajattelumalli laajemmin.
+- [] Repositorioihin ja sovelluslogiikkaan järkevämpi poikkeuksien hallintajärjestelmä raise-toiminnallisuutta käyttäen.
 - [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
 - [] Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]

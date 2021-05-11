@@ -180,11 +180,18 @@ class SetupView(QDialog):
             self.objects[0]["settings_view"]["save_u_button"], 11, 0)
 
         self.objects[0]["settings_view"]["cancel_u_button"] = QPushButton(
+            'Remove')
+        self.objects[0]["settings_view"]["cancel_u_button"].clicked.connect(
+            self.__handle_user_remove)
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["cancel_u_button"], 11, 1)
+
+        self.objects[0]["settings_view"]["cancel_u_button"] = QPushButton(
             'Cancel')
         self.objects[0]["settings_view"]["cancel_u_button"].clicked.connect(
             self.__close)
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["cancel_u_button"], 11, 1)
+            self.objects[0]["settings_view"]["cancel_u_button"], 12, 0)
 
         self.__load_current_user()
 
@@ -204,6 +211,17 @@ class SetupView(QDialog):
             self.objects[0]["extended_menu"]["name_label"].setText(
                 res.firstname+" "+res.lastname)
             self.__user[0] = res
+            self.__close()
+        else:
+            print('handle error')
+
+    def __handle_user_remove(self):
+        """1. poista käyttäjä
+        2. kirjaudu ulos jos onnistui
+        """
+        res = self.__user_service.remove(self.__user[0].id)
+        if res:
+            self.frames[0]["memoview"].handle_logout()
             self.__close()
         else:
             print('handle error')

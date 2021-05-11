@@ -71,8 +71,8 @@ class UserService:
             user_id: user's id as ObjectId.
 
         Returns:
-            bool: returns True if removed the user successfully, False if user was
-            not instance of user object or was given with user that is not in the database.
+            bool: returns True if removed the user successfully, False if user id was not instance of
+            ObjectID or was given with user that is not in the database.
         """
         old_user = self.user_repository.get('id', user_id)
         user_result = self.user_repository.remove(old_user)
