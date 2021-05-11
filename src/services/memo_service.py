@@ -217,18 +217,21 @@ class MemoService:
 
                 img_src = os.path.normpath(os.path.join(src, img_src))
 
-                img = self.image_service.get('name', img_name)[0]
-                if img.author != self.user_repository.get('id', get_id(author_id)):
-                    img = None
-                if img.image != self.image_service.convert_image(img_src):
-                    img = None
-                img = img if img else self.image_service.create(
-                    author_id, img_name, img_src, 600)
+                img = self.image_service.get('name', img_name)
+                if len(img) > 0:
+                    img = img[0]
+                    if img.author != self.user_repository.get('id', get_id(author_id)):
+                        img = None
+                    if img.image != self.image_service.convert_image(img_src):
+                        img = None
+                    img = img if img else self.image_service.create(
+                        author_id, img_name, img_src, 600)
 
-                img_tag = ""
-                if img:
-                    img_tag = "![]("+str(img.id)+')'
-                imported = imported[:index]+img_tag+imported[img_src_end+1:]
+                    img_tag = ""
+                    if img:
+                        img_tag = "![]("+str(img.id)+')'
+                    imported = imported[:index] + \
+                        img_tag+imported[img_src_end+1:]
 
                 index = imported.find('![](', index+1)
 

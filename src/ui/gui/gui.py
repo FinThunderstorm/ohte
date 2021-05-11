@@ -20,6 +20,7 @@ class GUI:
             image_service: service handler for images
             file_service: service handler for files
         """
+        self.config = config
         self.__app = QApplication(sys.argv)
         self.__screen = self.__app.primaryScreen()
         self.__screen_available = (self.__screen.availableGeometry(
@@ -39,14 +40,15 @@ class GUI:
         self.frames = [{}]
 
         self.__memo_view = MemoView(
-            self.__screen_available, self.__memo_service, self.__image_service, self.__user, self.objects, self.layouts, self.frames)
+            self.__screen_available, self.__memo_service, self.__image_service, self.__user, self.objects, self.layouts, self.frames, self.config)
         self.__login_view = LoginView(
             self.__screen_available, self.__user_service, self.__user, self.objects, self.layouts, self.frames)
         self.__setup_view = SetupView(
-            self.__screen_available, self.objects, self.layouts, self.frames, self.config)
+            self.__screen_available, self.objects, self.layouts, self.frames, self.config, self.__user, self.__user_service)
 
         self.frames[0]["memoview"] = self.__memo_view
         self.frames[0]["loginview"] = self.__login_view
+        self.frames[0]["setupview"] = self.__setup_view
 
         self.__memo_view.initialize()
         self.__login_view.initialize()

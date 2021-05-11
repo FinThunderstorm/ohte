@@ -9,7 +9,7 @@ class SetupView(QDialog):
         QDialog: imported from PyQt5.QtWidgets
     """
 
-    def __init__(self, screen, objects, layouts, frames, config):
+    def __init__(self, screen, objects, layouts, frames, config, user, user_service):
         """[summary]
 
         Args:
@@ -18,6 +18,8 @@ class SetupView(QDialog):
             layouts: shared dict between views holding each others layouts
             frames: shared dict between views holding each others frames
             config: apps configuration object
+            user: current user list to get logged user
+            user_service: handler service for users
         """
         super().__init__()
         self.__screen_width, self.__screen_height = screen
@@ -28,7 +30,11 @@ class SetupView(QDialog):
         self.layouts = layouts if layouts else {}
         self.frames = frames if frames else {}
 
+        self.__user_service = user_service
+
         self.config = config
+
+        self.__user = user
 
         self.layout = QGridLayout()
 
@@ -121,22 +127,86 @@ class SetupView(QDialog):
 
     def __close(self):
         self.done(1)
+        for widget in self.objects[0]["settings_view"].values():
+            widget.setParent(None)
 
     def __initialize_first_time(self):
         self.__initialize_shared_objects()
         self.__load_current_configuration()
 
     def __initialize_settings(self):
+        self.__initialize_shared_objects()
         self.__load_current_configuration()
-        self.__initalize_shared_objects()
 
         # käyttäjän tietojen muokkaaminen / poistaminen
         self.objects[0]["settings_view"]["user_label"] = QLabel(
             '<h3>User settings</h3>')
         self.layout.addWidget(
-            self.objects[0]["settings_view"]["user_label"], 6, 0)
+            self.objects[0]["settings_view"]["user_label"], 7, 0)
+
+        self.objects[0]["settings_view"]["firstname_label"] = QLabel(
+            'Firstname:')
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["firstname_label"], 8, 0)
+
+        self.objects[0]["settings_view"]["firstname_edit"] = QLineEdit()
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["firstname_edit"], 8, 1)
+
+        self.objects[0]["settings_view"]["lastname_label"] = QLabel(
+            'Lastname:')
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["lastname_label"], 9, 0)
+
+        self.objects[0]["settings_view"]["lastname_edit"] = QLineEdit()
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["lastname_edit"], 9, 1)
+
+        self.objects[0]["settings_view"]["password_label"] = QLabel(
+            'Password:')
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["password_label"], 10, 0)
+
+        self.objects[0]["settings_view"]["password_edit"] = QLineEdit()
+        self.objects[0]["settings_view"]["password_edit"].setEchoMode(
+            QLineEdit.Password)
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["password_edit"], 10, 1)
+
+        self.objects[0]["settings_view"]["save_u_button"] = QPushButton('Save')
+        self.objects[0]["settings_view"]["save_u_button"].clicked.connect(
+            self.__handle_user_save)
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["save_u_button"], 11, 0)
+
+        self.objects[0]["settings_view"]["cancel_u_button"] = QPushButton(
+            'Cancel')
+        self.objects[0]["settings_view"]["cancel_u_button"].clicked.connect(
+            self.__close)
+        self.layout.addWidget(
+            self.objects[0]["settings_view"]["cancel_u_button"], 11, 1)
 
         self.__load_current_user()
+
+    def __handle_user_save(self):
+        if not self.__user[0]:
+            return
+        firstname = self.objects[0]["settings_view"]["firstname_edit"].text()
+        lastname = self.objects[0]["settings_view"]["lastname_edit"].text()
+        password = self.objects[0]["settings_view"]["password_edit"].text()
+        if password == "":
+            password = self.__user[0].password
+        res = self.__user_service.update(self.__user[0].id,
+                                         firstname, lastname,
+                                         self.__user[0].username,
+                                         password)
+        if res:
+            self.objects[0]["extended_menu"]["name_label"].setText(
+                res.firstname+" "+res.lastname)
+            self.__user[0] = res
+            self.__close()
+        else:
+            print('handle error')
 
     def __handle_settings_save(self):
         try:
@@ -169,4 +239,8 @@ class SetupView(QDialog):
             configs["DB_USERNAME"])
 
     def __load_current_user(self):
-        pass
+        if self.__user[0]:
+            self.objects[0]["settings_view"]["firstname_edit"].setText(
+                self.__user[0].firstname)
+            self.objects[0]["settings_view"]["lastname_edit"].setText(
+                self.__user[0].lastname)

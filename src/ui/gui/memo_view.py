@@ -13,7 +13,7 @@ class MemoView(QFrame):
         QFrame: imported from PyQt5.QtWidgets
     """
 
-    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames):
+    def __init__(self, screen, memo_service, image_service, user, objects, layouts, frames, config):
         """Constructor for preparing the MemoView.
 
         Args:
@@ -24,11 +24,21 @@ class MemoView(QFrame):
             objects: shared dict between views holding each others objects
             layouts: shared dict between views holding each others layouts
             frames: shared dict between views holding each others frames
+            config: apps configuration object
         """
         super().__init__()
+        self.config = config
         self.__screen_width, self.__screen_height = screen
-        self.__active_width = 1650 if self.__screen_width > 1650 else self.__screen_width
-        self.__active_height = 1050 if self.__screen_height > 1050 else self.__screen_height
+
+        if self.config.get('RES_FORMAT') == "auto":
+            width = int(self.__screen_width) - 50
+            height = int(self.__screen_height) - 50
+        else:
+            width = int(self.config.get('RES_FORMAT').split("x")[0])
+            height = int(self.config.get('RES_FORMAT').split("x")[1])
+
+        self.__active_width = width if self.__screen_width > width else self.__screen_width
+        self.__active_height = height if self.__screen_height > height else self.__screen_height
         self.setFixedSize(self.__active_width, self.__active_height)
 
         self.memo_service = memo_service
@@ -344,9 +354,21 @@ class MemoView(QFrame):
             self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"] = QLabel(
             )
             self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"] = QLabel(
-                image.name+'<br />Width: '+str(image.width))
+                'Name: '+image.name)
+            self.objects[0]["image_selector"]["img_grid"][image.id]["name_edit"] = QLineEdit(
+            )
+            self.objects[0]["image_selector"]["img_grid"][image.id]["width_label"] = QLabel(
+                'Width: '+str(image.width))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["width_edit"] = QLineEdit(
+            )
+            self.objects[0]["image_selector"]["img_grid"][image.id]["save_button"] = QPushButton(
+                'Save')
             self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"] = QPushButton(
                 'Select')
+            self.objects[0]["image_selector"]["img_grid"][image.id]["edit_button"] = QPushButton(
+                'Edit')
+            self.objects[0]["image_selector"]["img_grid"][image.id]["remove_button"] = QPushButton(
+                'Remove')
 
             self.objects[0]["image_selector"]["img_grid"][image.id]["image_label"].setText(
                 '<img src="data:image/'+image.filetype+';base64,' +
@@ -354,6 +376,14 @@ class MemoView(QFrame):
             )
             self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"].clicked.connect(
                 partial(self.__add_image, image.id))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["edit_button"].clicked.connect(
+                partial(self.__handle_edit_image, image.id))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["remove_button"].clicked.connect(
+                partial(self.__handle_remove_image, image.id))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["save_button"].clicked.connect(
+                partial(self.__handle_save_edit_image, image.id))
+            self.objects[0]["image_selector"]["img_grid"][image.id]["width_edit"].setValidator(
+                QIntValidator(0, 7680, self))
 
             self.layouts[0]["image_selector_grid"][image.id].addStretch()
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
@@ -361,7 +391,24 @@ class MemoView(QFrame):
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["name_label"])
             self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["name_edit"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["width_label"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["width_edit"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["save_button"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["remove_button"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
+                self.objects[0]["image_selector"]["img_grid"][image.id]["edit_button"])
+            self.layouts[0]["image_selector_grid"][image.id].addWidget(
                 self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"])
+
+            self.objects[0]["image_selector"]["img_grid"][image.id]["name_edit"].hide()
+            self.objects[0]["image_selector"]["img_grid"][image.id]["width_edit"].hide()
+            self.objects[0]["image_selector"]["img_grid"][image.id]["save_button"].hide()
+
             self.layouts[0]["image_selector_select_grid"].addLayout(
                 self.layouts[0]["image_selector_grid"][image.id], current_row, imgs_in_row)
             imgs_in_row += 1
@@ -407,6 +454,49 @@ class MemoView(QFrame):
             self.layouts[0]["image_selector"])
 
         self.frames[0]["image_selector"].exec_()
+
+    def __handle_edit_image(self, iid):
+        self.objects[0]["image_selector"]["img_grid"][iid]["name_label"].setText(
+            'Name:')
+        self.objects[0]["image_selector"]["img_grid"][iid]["width_label"].setText(
+            'Width:')
+        self.objects[0]["image_selector"]["img_grid"][iid]["name_edit"].show()
+        self.objects[0]["image_selector"]["img_grid"][iid]["width_edit"].show()
+        self.objects[0]["image_selector"]["img_grid"][iid]["save_button"].show()
+
+        self.objects[0]["image_selector"]["img_grid"][iid]["remove_button"].hide()
+        self.objects[0]["image_selector"]["img_grid"][iid]["edit_button"].hide()
+        self.objects[0]["image_selector"]["img_grid"][iid]["select_button"].hide()
+
+    def __handle_save_edit_image(self, iid):
+        name = self.objects[0]["image_selector"]["img_grid"][iid]["name_edit"].text(
+        )
+        width = int(self.objects[0]["image_selector"]
+                    ["img_grid"][iid]["width_edit"].text())
+
+        img = self.image_service.get('id', iid)
+        res = self.image_service.update(
+            iid, img.author.id, name, img.image, img.filetype, width)
+        if res:
+            self.objects[0]["image_selector"]["img_grid"][iid]["name_label"].setText(
+                'Name: '+res.name)
+            self.objects[0]["image_selector"]["img_grid"][iid]["width_label"].setText(
+                'Width: '+str(res.width))
+            self.objects[0]["image_selector"]["img_grid"][iid]["name_edit"].hide()
+            self.objects[0]["image_selector"]["img_grid"][iid]["width_edit"].hide()
+            self.objects[0]["image_selector"]["img_grid"][iid]["save_button"].hide()
+
+            self.objects[0]["image_selector"]["img_grid"][iid]["remove_button"].show()
+            self.objects[0]["image_selector"]["img_grid"][iid]["edit_button"].show()
+            self.objects[0]["image_selector"]["img_grid"][iid]["select_button"].show()
+        else:
+            print('handle error')
+
+    def __handle_remove_image(self, iid):
+        res = self.image_service.remove(iid)
+        if res:
+            for widget in self.objects[0]["image_selector"]["img_grid"][iid].values():
+                widget.setParent(None)
 
     def __initialize_image_selector_add(self):
         self.layouts[0]["image_selector_add"] = QGridLayout()
@@ -796,7 +886,7 @@ class MemoView(QFrame):
         self.frames[0]["loginview"].show()
 
     def __handle_settings(self):
-        pass
+        self.frames[0]["setupview"].run()
 
     def __show_hide_extended_menu(self):
         if self.__extended_menu == 'hidden':

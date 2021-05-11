@@ -38,7 +38,6 @@ class LoginView(QFrame):
         self.__initialize_create_user()
 
         self.setWindowTitle('Muistio')
-        # self.setGeometry(2760, 1360, 1080, 800)  # used for dev purposes only
         width = 400
         height = 600
         width_pos = self.__screen_width//2 - width//2
