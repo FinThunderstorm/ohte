@@ -41,8 +41,8 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
   - taulukkotuki ja listatuki lisätty
 - [x] Kuvien upottaminen
 - [x] Mahdollisuus tuoda/viedä Markdown-muotoiltuja tiedostoja
-- [X] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla
-- [] Asetukset (vko 7 todo)
+- [x] Verkkosisällön tallentaminen muistioon Python kirjaston [trafilatura](https://trafilatura.readthedocs.io/en/latest/) avulla
+- [x] Asetukset
 
   - [x] muistion resoluution koon tallentaminen .env-tiedostoon
   - [x] muistion db-osoitteen muuttaminen, ensimmäiselle käynnistyskerralle lisättävä gui envin tekemiseen.
@@ -53,13 +53,13 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
 
 ## Kurssin jälkeisen tulevaisuuden kehittämismahdollisuuksia
 
-- [] Tyylittely, vakiotyyli tarvitsee parannusta
-- [] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
-- [] Lajittelumahdollisuudet
-- [] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
-- [] Käyttäjähallinta
-- [] Muistikirjan jakaminen toiselle käyttäjälle
-- [] MemoServiceen current user -ajattelumalli laajemmin.
-- [] Repositorioihin ja sovelluslogiikkaan järkevämpi poikkeuksien hallintajärjestelmä raise-toiminnallisuutta käyttäen.
-- [] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
-- [] Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]
+- [ ] Tyylittely, vakiotyyli tarvitsee parannusta
+- [ ] Muistioiden lajitteleminen kansioittain + värikoodit kansioille, selvitettävä ikonien käyttö
+- [ ] Lajittelumahdollisuudet
+- [ ] Muistutusjärjestelmä, muistiolle voidaan asettaa aika, jolloin käyttäjä saa siitä sovelluksessa ilmoituksen.
+- [ ] Käyttäjähallinta
+- [ ] Muistikirjan jakaminen toiselle käyttäjälle
+- [ ] MemoServiceen current user -ajattelumalli laajemmin.
+- [ ] Repositorioihin ja sovelluslogiikkaan järkevämpi poikkeuksien hallintajärjestelmä raise-toiminnallisuutta käyttäen.
+- [ ] Kuvan koon määritteleminen abstraktimmin kuvan kokoon pohjautuen
+- [ ] Rich Text Editor - pois editor-viewer-ajattelusta. (Idea.)[https://doc.qt.io/qt-5/qtquickcontrols-texteditor-example.html]

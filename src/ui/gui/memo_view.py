@@ -1,4 +1,5 @@
 from utils.helpers import get_empty_memo, get_id
+from ui.gui.error_view import ErrorView
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QTextBrowser, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
@@ -28,6 +29,7 @@ class MemoView(QFrame):
         """
         super().__init__()
         self.config = config
+        self.__screen = screen
         self.__screen_width, self.__screen_height = screen
 
         if self.config.get('RES_FORMAT') == "auto":
@@ -490,13 +492,19 @@ class MemoView(QFrame):
             self.objects[0]["image_selector"]["img_grid"][iid]["edit_button"].show()
             self.objects[0]["image_selector"]["img_grid"][iid]["select_button"].show()
         else:
-            print('handle error')
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
     def __handle_remove_image(self, iid):
         res = self.image_service.remove(iid)
         if res:
             for widget in self.objects[0]["image_selector"]["img_grid"][iid].values():
                 widget.setParent(None)
+        else:
+            ErrorView(self.__screen, "Error while removing",
+                      'There were a problem while trying to remove. ' +
+                      'Please try again.')
 
     def __initialize_image_selector_add(self):
         self.layouts[0]["image_selector_add"] = QGridLayout()
@@ -564,7 +572,9 @@ class MemoView(QFrame):
         file_location = self.objects[0]["image_selector_add"]["file_loc_edit"].text(
         )
         if name == "" or width == "" or file_location == "":
-            return
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
         width = int(width)
         image = self.image_service.create(
             self.user[0].id, name, file_location, width)
@@ -572,8 +582,9 @@ class MemoView(QFrame):
             self.__add_image(image.id)
             self.__close_image_selector()
         else:
-            self.objects[0]["image_selector_add"]["error_label"].setText(
-                'error while uploading image, try again')
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
     def __handle_add_image_filedialog(self):
         filename, _ = QFileDialog.getOpenFileName(
@@ -651,13 +662,19 @@ class MemoView(QFrame):
         title = self.objects[0]["editor"]["title_edit"].text()
         content = self.objects[0]["editor"]["content_edit"].toPlainText()
         if title == "" or len(title) > 50:
-            return
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
         updated_memo = self.memo_service.update(
             self.__editor_memo.id, self.__editor_memo.author.id, title, content, self.__editor_memo.date)
         if updated_memo:
             self.__set_viewer_memo(updated_memo)
             self.frames[0]["editor"].hide()
             self.frames[0]["viewer"].show()
+        else:
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
     def __handle_new_memo(self):
         title = self.objects[0]["new_memo"]["title_edit"].text()
@@ -673,6 +690,10 @@ class MemoView(QFrame):
             self.frames[0]["new_memo"].done(1)
             self.frames[0]["viewer"].hide()
             self.frames[0]["editor"].show()
+        else:
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
     def __new_memo(self):
         self.frames[0]["new_memo"] = QDialog()
@@ -710,6 +731,10 @@ class MemoView(QFrame):
             self.frames[0]["import_from"].done(1)
             self.frames[0]["viewer"].hide()
             self.frames[0]["editor"].show()
+        else:
+            ErrorView(self.__screen, "Error while importing",
+                      'There were a problem while trying to import. ' +
+                      'Please check your input and try again.')
 
     def __handle_import_from_file(self):
         src = self.objects[0]["import_from_file"]["src_edit"].text()
@@ -725,6 +750,10 @@ class MemoView(QFrame):
             self.frames[0]["import_from"].done(1)
             self.frames[0]["viewer"].hide()
             self.frames[0]["editor"].show()
+        else:
+            ErrorView(self.__screen, "Error while importing",
+                      'There were a problem while trying to import. ' +
+                      'Please check your input and try again.')
 
     def __import_from_web(self):
         self.frames[0]["import_from"] = QDialog()
@@ -842,6 +871,10 @@ class MemoView(QFrame):
             self.objects[0]["viewer"]["title_label"].setText('')
             self.objects[0]["viewer"]["info_label"].setText('')
             self.objects[0]["viewer"]["content_label"].setText('')
+        else:
+            ErrorView(self.__screen, "Error while removing",
+                      'There were a problem while trying to remove. ' +
+                      'Please try again.')
 
         self.frames[0]["remove_memo"].done(1)
 

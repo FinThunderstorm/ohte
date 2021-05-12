@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QLineEdit, QFrame
+from ui.gui.error_view import ErrorView
 
 
 class LoginView(QFrame):
@@ -20,6 +21,7 @@ class LoginView(QFrame):
             frames: shared dict between views holding each others frames
         """
         super().__init__()
+        self.__screen = screen
         self.__screen_width, self.__screen_height = screen
         self.user_service = user_service
         self.objects = objects if objects else {}
@@ -116,33 +118,11 @@ class LoginView(QFrame):
             self.frames[0]["loginview"].hide()
             self.frames[0]["memoview"].run()
         else:
-            self.__login_error()
+            ErrorView(self.__screen, "Error while trying to log in",
+                      'Username or password were incorrect.')
 
         username = self.objects[0]["login"]["username_edit"].setText('')
         password = self.objects[0]["login"]["password_edit"].setText('')
-
-    def __login_error(self):
-        self.frames[0]["login_error"] = QDialog()
-        self.objects[0]["login_error"] = {}
-        self.frames[0]["login_error"].setWindowTitle("Error while logging in")
-
-        self.layouts[0]["login_error"] = QVBoxLayout()
-        self.objects[0]["login_error"]["error_message"] = QLabel(
-            "username or password incorrect")
-        self.layouts[0]["login_error"].addWidget(
-            self.objects[0]["login_error"]["error_message"])
-
-        self.objects[0]["login_error"]["ok_button"] = QPushButton('ok')
-        self.objects[0]["login_error"]["ok_button"].clicked.connect(
-            self.__handle_ok)
-        self.layouts[0]["login_error"].addWidget(
-            self.objects[0]["login_error"]["ok_button"])
-
-        self.frames[0]["login_error"].setLayout(self.layouts[0]["login_error"])
-        self.frames[0]["login_error"].exec_()
-
-    def __handle_ok(self):
-        self.frames[0]["login_error"].done(1)
 
     def __initialize_create_user(self):
         self.frames[0]["create_new_user"] = QFrame()
@@ -221,6 +201,10 @@ class LoginView(QFrame):
         if result:
             self.frames[0]["create_new_user"].hide()
             self.frames[0]["login"].show()
+        else:
+            ErrorView(self.__screen, "Error while creating",
+                      'There were a problem while trying to create new user. ' +
+                      'Please check your input and try again. Username may be in use already.')
         self.objects[0]["create_new_user"]["firstname_edit"].setText('')
         self.objects[0]["create_new_user"]["lastname_edit"].setText('')
         self.objects[0]["create_new_user"]["username_edit"].setText('')

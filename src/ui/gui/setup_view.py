@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QFileDialog, QScrollArea, QGridLayout, QVBoxLayout, QHBoxLayout, QTabWidget, QLabel, QPushButton, QTextEdit, QLineEdit, QFrame, QComboBox
 from PyQt5.QtCore import Qt
+from ui.gui.error_view import ErrorView
 
 
 class SetupView(QDialog):
@@ -10,7 +11,7 @@ class SetupView(QDialog):
     """
 
     def __init__(self, screen, objects, layouts, frames, config, user, user_service):
-        """[summary]
+        """Constructor for SetupView.
 
         Args:
             screen: available screen width and height
@@ -22,6 +23,7 @@ class SetupView(QDialog):
             user_service: handler service for users
         """
         super().__init__()
+        self.__screen = screen
         self.__screen_width, self.__screen_height = screen
         self.__active_width = 400
         self.__active_height = 300
@@ -41,6 +43,8 @@ class SetupView(QDialog):
     def __initialize(self):
         width_pos = self.__screen_width//2 - self.__active_width//2
         height_pos = self.__screen_height//2 - self.__active_height//2
+
+        self.setWindowTitle("Settings")
 
         self.setGeometry(width_pos, height_pos,
                          self.__active_width, self.__active_height)
@@ -197,7 +201,9 @@ class SetupView(QDialog):
 
     def __handle_user_save(self):
         if not self.__user[0]:
-            return
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
         firstname = self.objects[0]["settings_view"]["firstname_edit"].text()
         lastname = self.objects[0]["settings_view"]["lastname_edit"].text()
         password = self.objects[0]["settings_view"]["password_edit"].text()
@@ -213,18 +219,23 @@ class SetupView(QDialog):
             self.__user[0] = res
             self.__close()
         else:
-            print('handle error')
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
     def __handle_user_remove(self):
-        """1. poista käyttäjä
-        2. kirjaudu ulos jos onnistui
-        """
+        if not self.__user[0]:
+            ErrorView(self.__screen, "Error while removing",
+                      'There were a problem while trying to remove. ' +
+                      'Please try again.')
         res = self.__user_service.remove(self.__user[0].id)
         if res:
             self.frames[0]["memoview"].handle_logout()
             self.__close()
         else:
-            print('handle error')
+            ErrorView(self.__screen, "Error while removing",
+                      'There were a problem while trying to remove. ' +
+                      'Please try again.')
 
     def __handle_settings_save(self):
         try:
@@ -239,7 +250,9 @@ class SetupView(QDialog):
                 self.config.set_value(
                     "db_password", db_password)
         except ValueError:
-            return
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
 
         self.config.save()
         self.__close()
