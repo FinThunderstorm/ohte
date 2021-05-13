@@ -1,5 +1,6 @@
 import base64
 import os
+from utils.helpers import get_type_id
 from repositories.image_repository import image_repository as default_image_repository
 from repositories.user_repository import user_repository as default_user_repository
 from repositories.file_repository import file_repository as default_file_repository
@@ -54,7 +55,7 @@ class ImageService:
 
         if name == "":
             name = filename.split('/')
-            name = filename[len(name)-1]
+            name = name[len(name)-1]
             name = name if len(name) < 50 else name[:50]
 
         image = {
@@ -78,13 +79,12 @@ class ImageService:
         Returns:
             string: image content as base64 encrypted string.
         """
-        try:
-            img_file = self.file_repository.open_file(
-                image_src, byte=True)
-            image_string = base64.b64encode(img_file).decode('utf-8')
-            return image_string
-        except FileNotFoundError:
+        img_file = self.file_repository.open_file(
+            image_src, byte=True)
+        if img_file is None:
             return None
+        image_string = base64.b64encode(img_file).decode('utf-8')
+        return image_string
 
     def update(self, image_id, author_id, name, image_string, filetype, width):
         """update is used to handle updates into image in the database.
@@ -139,6 +139,8 @@ class ImageService:
         Returns:
             Union([List, QuerySet, Image, None]): returns objects based on used mode.
         """
+        if mode == "author" and isinstance(search_term, get_type_id()):
+            search_term = self.user_repository.get('id', search_term)
         result = self.image_repository.get(mode, search_term)
         return result
 

@@ -25,11 +25,8 @@ class FileService:
             string: content of opened file and if file repository raises problems
                     when trying to open file, returns None.
         """
-        try:
-            content = self.file_repository.open_file(src, byte)
-            return content
-        except OSError:
-            return None
+        content = self.file_repository.open_file(src, byte)
+        return content
 
     def save_file(self, src, content):
         """save_file handles saving files such as exported memo as markdown

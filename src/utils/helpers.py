@@ -107,12 +107,13 @@ def get_test_image_obj():
     """get_test_image_obj is used for mocking Memo objects with values. Mainly used with tests.
 
     Returns:
-        Memo: created Memo-object.
+        Image: created Image-object.
     """
     image = Image(
         author=get_test_memo_user(),
         name="Test Image",
-        image="unvalid image base64 encoding",
+        image='unvalid base64 encoded string',
+        width=500
     )
     return image
 

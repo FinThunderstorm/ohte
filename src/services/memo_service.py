@@ -59,12 +59,12 @@ class MemoService:
             "content": content,
             "date": get_time(),
         }
-        saved_memo = self.memo_repository.new(memo)
+        result = self.memo_repository.new(memo)
 
-        author.memos.append(saved_memo.id)
+        author.memos.append(result.id)
         self.user_repository.update(author)
 
-        return saved_memo
+        return result
 
     def update(self, memo_id, author_id, title, content, date):
         """update is used to handle updates into memo in the database.
@@ -84,8 +84,7 @@ class MemoService:
         memo.title = title
         memo.content = content
         memo.date = date
-        updated_memo = self.memo_repository.update(memo)
-        return updated_memo
+        return self.memo_repository.update(memo)
 
     def remove(self, memo_id):
         """remove is used to remove memos from the database.
@@ -96,14 +95,14 @@ class MemoService:
         Returns:
             bool: returns True if removal were success, else False.
         """
-        old_memo = self.memo_repository.get('id', memo_id)
-        memo_result = self.memo_repository.remove(old_memo)
-        if memo_result:
-            author = old_memo.author
+        memo = self.memo_repository.get('id', memo_id)
+        result = self.memo_repository.remove(memo)
+        if result:
+            author = memo.author
             authors_memos = []
-            for memo in author.memos:
-                if memo.id != old_memo.id:
-                    authors_memos.append(memo)
+            for tmemo in author.memos:
+                if tmemo.id != memo.id:
+                    authors_memos.append(tmemo)
             author.memos = authors_memos
             self.user_repository.update(author)
             return True
@@ -128,8 +127,7 @@ class MemoService:
             Union([List, QuerySet, Memo, None]): returns objects based on used function
             in the cases dictionary.
         """
-        result = self.memo_repository.get(mode, search_term)
-        return result
+        return self.memo_repository.get(mode, search_term)
 
     def count(self, mode="all", search_term=None):
         """count handles counting memos in the database based on selected mode by
@@ -146,15 +144,14 @@ class MemoService:
         """
         if mode == "author":
             search_term = self.user_repository.get("id", search_term)
-        result = self.memo_repository.count(mode, search_term)
-        return result
+        return self.memo_repository.count(mode, search_term)
 
     def import_from_url(self, author_id, url):
         """import_from_url is used to import memos from external sources in internet.
 
         Args:
             author_id: memo's author's id as ObjectId.
-            url: source location whre imported content is currently as string.
+            url: source location where imported content is currently as string.
 
         Returns:
             Union(Memo, None): returns Memo if saved successfully, returns None if not or
@@ -173,22 +170,19 @@ class MemoService:
             while index != -1:
                 content = content[:index] + "\n" + content[index:]
                 index = content.find('\n', index+2)
-            url_i_start = url.find("://")
-            url_i_end = url.find("/", url_i_start+3)
-            site_name = url[url_i_start+3:url_i_end] if len(
-                url[url_i_start+3:url_i_end]) < 36 else url[url_i_start+3:36]
-            title = "Imported from " + site_name
-            saved_memo = self.create(author_id, title, content)
-            return saved_memo
+            url_i = (url.find("://"), url.find("/", url.find("://")+3))
+            title = "Imported from " + url[url_i[0]+3:url_i[1]] if len(
+                url[url_i[0]+3:url_i[1]]) < 36 else url[url_i[0]+3:36]
+            return self.create(author_id, title, content)
         except ValueError:
             return None
 
     def import_from_file(self, author_id, src):
-        """[summary]
+        """import from file is used to import memos from markdown files
 
         Args:
-            author_id ([type]): [description]
-            src ([type]): [description]
+            author_id: memo's author's id as ObjectId.
+            src: source location where imported content is currently as string.
 
         Returns:
             Union(Memo, None): returns Memo if import were successful. Returns
@@ -219,29 +213,34 @@ class MemoService:
 
                 img = self.image_service.get('name', img_name)
                 if len(img) > 0:
-                    img = img[0]
-                    if img.author != self.user_repository.get('id', get_id(author_id)):
+                    i = 0
+                    while i < len(img):
+                        imgs = img[i]
+                        status = True
+                        if imgs.author != self.user_repository.get('id', get_id(author_id)):
+                            status = False
+                        if imgs.image != self.image_service.convert_image(img_src):
+                            status = False
+                        if status:
+                            img = imgs
+                            break
+                        i += 1
+                    else:
                         img = None
-                    if img.image != self.image_service.convert_image(img_src):
-                        img = None
-                    img = img if img else self.image_service.create(
-                        author_id, img_name, img_src, 600)
+                img = img if img else self.image_service.create(
+                    author_id, img_name, img_src, 600)
 
-                    img_tag = ""
-                    if img:
-                        img_tag = "![]("+str(img.id)+')'
-                    imported = imported[:index] + \
-                        img_tag+imported[img_src_end+1:]
-
+                img_tag = ""
+                if img:
+                    img_tag = "![]("+str(img.id)+')'
+                imported = imported[:index] + \
+                    img_tag+imported[img_src_end+1:]
                 index = imported.find('![](', index+1)
 
             title = "Imported from "+filename
             title = title if len(title) < 50 else title[:50]
 
-            saved_memo = self.create(author_id, title, imported)
-            return saved_memo
-        except OSError:
-            return None
+            return self.create(author_id, title, imported)
         except ValueError:
             return None
 

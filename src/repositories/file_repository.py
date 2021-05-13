@@ -12,19 +12,19 @@ class FileRepository:
                   base64-string. If True, function will add byte indicator into
                   used mode in open. Defaults to False.
 
-        Raises:
-            OSError: if file not found or other error while trying to open file.
-
         Returns:
             string: content of opened file
         """
         mode = "r"
         if byte:
             mode += "b"
-        with open(src, mode) as file:
-            content = file.read()
-            file.close()
-            return content
+        try:
+            with open(src, mode) as file:
+                content = file.read()
+                file.close()
+                return content
+        except FileNotFoundError:
+            return None
 
     def save_file(self, src, content):
         """save_file handles saving files such as exported memo as markdown
