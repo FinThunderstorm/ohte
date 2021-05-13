@@ -1,6 +1,6 @@
 # Käyttöohje
 
-Aloita lataamalla viimeisin (relase)[https://github.com/FinThunderstorm/ohte/releases]. Avaa terminaali/komentojana projektikansiosta.
+Aloita lataamalla viimeisin [relase](https://github.com/FinThunderstorm/ohte/releases). Avaa terminaali/komentojana projektikansiosta.
 
 ## Asentaminen
 
@@ -70,6 +70,18 @@ Uuden perusmuistion luominen tapahtuu antamalla muistiolle otsikon. Mikäli jät
 
 ![](./kuvat/new-memo.png)
 
+### Tuonti tiedostosta
+
+Valitse tuotavan markdown-tiedoston sijainti "Select"-napilla. Annettuasi sijainnin, tuo muistio "Import"-napilla. Avautuu tuotu muistio muokkaustilassa.
+
+![](./kuvat/import-file.png)
+
+### Tuonti verkosta
+
+Liitä verkkosijainnin osoite kenttään ja tuo "Import"-napilla. Mikäli verkkolähteen osoite oli toimiva ja siitä pystyttiin parsimaan muistio, avautuu tämä muistio muokkaustilassa. Mikäli verkkosijainnin osoite oli virheellinen tai sieltä ei pystytty parsimaan sisältöä, avautuu virheilmoitus.
+
+![](./kuvat/import-web.png)
+
 ## Päävalikko
 
 "Main menu"-napin takaa löytyy sovelluksen päävalikko, josta pääsee asetuksiin ("Settings") ja pystyy kirjautumaan sovelluksesta ulos ("Log out").
@@ -103,3 +115,9 @@ Jo tallennetun kuvan lisääminen tekstin osoittimen mukaiseen kohtaan tapahtuu 
 Täytä muuttuneet kentät ja tallenna muutokset "Save"-napilla. Jos muutoksia ei ole, pystyt palaamaan takaisin "Save"-napilla.
 
 ![](./kuvat/image-edit.png)
+
+## Asetukset
+
+Ohjelman asetuksia voi hallita päävalikosta löytyvän "Settings"-napin takaa. Valikosta voi hallita käyttäjätietoja sekä tietokantayhteyden asetuksia. Tietokantayhteyden ja näyttöasetuksien muutokset hyväksytään ylemmällä "Save"-napilla. Käyttäjämuutokset hyväksytään alemmalla "Save"-napilla. Käyttäjän voi poistaa "Remove"-napilla. Muutokset voi peruuttaa "Cancel"-napeilla.
+
+![](./kuvat/settings-user.png)
