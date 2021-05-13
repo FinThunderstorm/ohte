@@ -10,6 +10,7 @@ Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä usea
 
 - [Viikon 5 release](https://github.com/FinThunderstorm/ohte/releases/tag/viikko5)
 - [Viikon 6 release](https://github.com/FinThunderstorm/ohte/releases/tag/viikko6)
+- [Viikon 7 / loppupalautuksen release](https://github.com/FinThunderstorm/ohte/releases/tag/viikko7)
 
 ### Dokumentaatio
 
@@ -17,6 +18,7 @@ Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä usea
 - [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)
 - [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuuri.md)
 - [Käyttöohje](./dokumentaatio/käyttöohje.md)
+- [Testausdokumentti](./dokumentaatio/testausraportti.md)
 
 ### Asentaminen
 
@@ -34,14 +36,17 @@ poetry run invoke start
 
 3. Täytä asetustiedot avautuvaan ikkunaan. Tarvittavat tietokannan käyttäjätiedot, _username_ ja _password_, saat pyytämällä Telegramista _@finthunderstorm_.
 
+#### Huomioita Python-versiosta
+
+Sovellus on kehitetty käyttäen Python 3.9.1 -versiota, mutta pitäisi olla yhteensopiva version 3.6.0 alkaen kanssa yhteensopiva. Virhetilanteita voi kuitenkin esiintyä.
+
+#### Ongelmatilanteiden ratkaisuja
+
+- Jos ohjelman suoritus kaatuu sertifikaatin validointiongelmaan, ratkaisuna toimii seuraava: <https://stackoverflow.com/a/54511693>
+
 ### Komennot
 
 - Ohjelman suorittaminen tapahtuu komennolla `poetry run invoke start`
 - Testien suorittaminen tapahtuu komennolla `poetry run invoke test`
-- Testikattavuuden luominen tapahtuu komennolla `poetry run invoke coverage-report`, joka löytyy htmlcov-kansiosta.
+- Testikattavuuden raportin luominen tapahtuu komennolla `poetry run invoke coverage-report`, joka löytyy htmlcov-kansiosta.
 - Koodin laadun tarkastaminen tapahtuu komennolla `poetry run invoke lint`
-
-### Notes to myself:
-
-- Pymongon sertifikaatin validointiongelman ratkaisu: <https://stackoverflow.com/a/54511693>
-- Mainitse oikeassa dokkarissa, että MemoRepositoryn rivillä 30, ImageRepositoryn rivillä 30 ja UserRepositoryn rivillä 35 on pylint disabloitu no-memberin osalta, pylint ei ymmärrä mongoenginen alaluokan omaavan tälläistä objects-arvoa, jonka Memon pääluokka Document tarjoaa.
