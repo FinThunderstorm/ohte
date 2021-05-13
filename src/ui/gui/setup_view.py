@@ -73,7 +73,7 @@ class SetupView(QDialog):
 
         self.objects[0]["settings_view"]["resolution_selector"] = QComboBox()
         self.objects[0]["settings_view"]["resolution_selector"].addItems(
-            ["", "auto", "800x600", "1280x720", "1366x768", "1920x1080", "1920x1200", "3840x2160"])
+            ["", "auto", "800x600", "1280x720", "1366x768", "1650x1050", "1920x1080", "1920x1200", "3840x2160"])
         self.layout.addWidget(
             self.objects[0]["settings_view"]["resolution_selector"], 2, 1)
 

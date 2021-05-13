@@ -376,6 +376,10 @@ class MemoView(QFrame):
                 '<img src="data:image/'+image.filetype+';base64,' +
                 image.image+'" width="250"  alt="" />'
             )
+            self.objects[0]["image_selector"]["img_grid"][image.id]["name_edit"].setText(
+                image.name)
+            self.objects[0]["image_selector"]["img_grid"][image.id]["width_edit"].setText(
+                str(image.width))
             self.objects[0]["image_selector"]["img_grid"][image.id]["select_button"].clicked.connect(
                 partial(self.__add_image, image.id))
             self.objects[0]["image_selector"]["img_grid"][image.id]["edit_button"].clicked.connect(
@@ -797,7 +801,7 @@ class MemoView(QFrame):
         self.layouts[0]["import_from_file"].addWidget(
             self.objects[0]["import_from_file"]["src_edit"], 1, 1)
         self.objects[0]["import_from_file"]["select_button"] = QPushButton(
-            'Import')
+            'Select')
         self.objects[0]["import_from_file"]["select_button"].clicked.connect(
             self.__handle_import_filedialog)
         self.layouts[0]["import_from_file"].addWidget(
