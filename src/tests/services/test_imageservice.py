@@ -15,6 +15,8 @@ class TestImageService(unittest.TestCase):
         self.image_service = image_service
         self.author = self.userrepo.update(
             get_test_memo_user('6072d33e3a3c627a49901cd7', "memouser2"))
+        self.second_author = self.userrepo.update(
+            get_test_memo_user('608bd901507fc317f17ab301', "memouser3"))
         self.before = self.image_service.count()
 
     def tearDown(self):
@@ -163,7 +165,7 @@ class TestImageService(unittest.TestCase):
         second_image = self.image_service.create(
             self.author.id, 'testimage2', imgsrc, 600)
         third_image = self.image_service.create(
-            get_id('608bd901507fc317f17ab300'), 'otherimage3', imgsrc, 600)
+            get_id('608bd901507fc317f17ab301'), 'otherimage3', imgsrc, 600)
 
         images = self.image_service.get('author', self.author.id)
         self.assertEqual(len(images), 2)

@@ -20,7 +20,7 @@ poetry run invoke start
 
 ## Konfiguraatiotiedosto .env
 
-Sovellus luo tämän tiedoston ensimmäisellä käynnistyskerralla ja sen sisältöön voi vaikuttaa käyttämällä graafista asetustyökalua.
+Sovellus luo tämän tiedoston ensimmäisellä käynnistyskerralla sovelluskansion juureen ja sen sisältöön voi vaikuttaa käyttämällä graafista asetustyökalua.
 
 Tiedoston rakenne on seuraava:
 

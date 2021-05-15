@@ -253,6 +253,7 @@ class SetupView(QDialog):
             ErrorView(self.__screen, "Error while saving",
                       'There were a problem while trying to save. ' +
                       'Please check your input and try again.')
+            return
 
         self.config.save()
         self.__close()

@@ -32,7 +32,7 @@ class MemoView(QFrame):
         self.__screen = screen
         self.__screen_width, self.__screen_height = screen
 
-        if self.config.get('RES_FORMAT') == "auto":
+        if self.config.get('RES_FORMAT') == "auto" or self.config.get('RES_FORMAT') == "":
             width = int(self.__screen_width) - 50
             height = int(self.__screen_height) - 50
         else:

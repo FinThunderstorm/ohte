@@ -9,7 +9,7 @@ class Config:
         file_service: handler for saving values into .env-file.
     """
 
-    def __init__(self, file_service):
+    def __init__(self, file_service, src=None):
         """Constructor for the class, loads current configs into memory if
         present, or if not, creates default config.
 
@@ -18,7 +18,7 @@ class Config:
         """
         self.__file_service = file_service
 
-        self.__env_location = path.join(
+        self.__env_location = src if src else path.join(
             path.dirname(__file__), '..', '..', '.env')
         self.__configs = dotenv_values(self.__env_location)
 
