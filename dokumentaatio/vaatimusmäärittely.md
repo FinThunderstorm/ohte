@@ -2,19 +2,21 @@
 
 ## Tarkoitus
 
-Sovelluksen tarkoitus on toimia käyttäjän muistikirjana. Käyttäjä voi lisätä, katsella tai muokata muistioita. Käyttäjä voi myös tuoda tiedostosta Markdown-muotoisia tiedostoja tai verkkosivuja haluamastaan verkko-osoitteesta. Käyttäjä voi lisätä valokuvia muistioihin.
+Sovelluksen tarkoitus on toimia käyttäjän muistikirjana. Pääidea on tarjota käyttäjälle alusta, jolla hän pystyy hallinnoimaan omia muistioitaan ja käsittelemään muistettavia asioita yhdellä sovelluksella, monella eri laitteella, kun käytössä on verkossa oleva tietokantapalvelin. Käyttäjä voi lisätä, katsella tai muokata muistioita. Käyttäjä voi myös tuoda tiedostosta Markdown-muotoisia tiedostoja tai verkkosivuja haluamastaan verkko-osoitteesta. Käyttäjä voi lisätä valokuvia muistioihin.
 
 ## Käyttäjät
 
-Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peruskäyttäjiä. Peruskäyttäjä voi hallita sovelluksella omia tietojaan.
+Sovelluksessa on ensimmäisessä vaiheessa yhden tasoisia käyttäjiä, eli peruskäyttäjiä. Peruskäyttäjä voi hallita sovelluksella omia tietojaan. Lisättäessä tiimimahdollisuus, harkitaan sekä pääkäyttäjä, että tiiminvetäjän oikeuksien lisääminen.
 
 ## "Tech stack"
 
 - Python 3.6 tuki
   - PyQt5 -graafinen kirjasto
-- MongoDB -tietokanta taustalla ulkoisella palvelimella.
+- MongoDB -tietokanta taustalla ulkoisella palvelimella, kehitysvaiheessa MongoDB Atlaksessa.
 
 ## Käyttöliittymähahmotelma
+
+Käyttöliittymähahmotelmassa on esitetty päätoiminnallisuuksien toiminta sovelluksessa. Käytännössä sovelluksessa on kaksi päänäkymää, ja lisäksi näitä tukevia alinäkymiä. Käyttöliittymähahmotelmassa ei ole huomioitu erilaisten toiminnallisuuksien alinäkymiä., kuten kuvan lisäämistyökalu tai muistion tuominen verkkolähteestä.
 
 ![](./kuvat/interface.png)
 
@@ -49,7 +51,7 @@ Ensimmäisen vaiheen jälkeen ohjelmaa voidaan lähteä jatkokehittämään seur
   - [x] käyttäjän poistaminen ja tietojen päivittäminen
   - [x] resoluution koon käsittely .env-tiedoston pohjalta
 
-- [] virheilmoitusten parantaminen & lisääminen (vko 7 todo - prio 1)
+- [x] virheilmoitusten parantaminen & lisääminen
 
 ## Kurssin jälkeisen tulevaisuuden kehittämismahdollisuuksia
 
