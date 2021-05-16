@@ -208,6 +208,11 @@ class SetupView(QDialog):
         firstname = self.objects[0]["settings_view"]["firstname_edit"].text()
         lastname = self.objects[0]["settings_view"]["lastname_edit"].text()
         password = self.objects[0]["settings_view"]["password_edit"].text()
+        if firstname == "" or lastname == "":
+            ErrorView(self.__screen, "Error while saving",
+                      'There were a problem while trying to save. ' +
+                      'Please check your input and try again.')
+            return
         if password == "":
             password = self.__user[0].password
         res = self.__user_service.update(self.__user[0].id,
