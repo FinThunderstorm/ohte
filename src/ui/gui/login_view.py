@@ -205,6 +205,7 @@ class LoginView(QFrame):
             ErrorView(self.__screen, "Error while creating",
                       'There were a problem while trying to create new user. ' +
                       'Please check your input and try again. Username may be in use already.')
+            return
         self.objects[0]["create_new_user"]["firstname_edit"].setText('')
         self.objects[0]["create_new_user"]["lastname_edit"].setText('')
         self.objects[0]["create_new_user"]["username_edit"].setText('')
