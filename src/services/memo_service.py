@@ -188,59 +188,74 @@ class MemoService:
             Union(Memo, None): returns Memo if import were successful. Returns
                                None if imported file were empty or no file found.
         """
+        memo = {
+            "imported": "",
+            "filename": "",
+            "file_ext": "",
+            "title": "",
+            "img_src": "",
+            "img_name": "",
+            "index": None,
+            "img_src_end": None,
+            "status": None,
+            "img_tag": "",
+        }
         try:
-            imported = self.file_repository.open_file(src)
-            if not imported:
+            memo["imported"] = self.file_repository.open_file(src)
+            if not memo["imported"]:
                 raise ValueError("File was empty")
 
-            filename, file_ext = os.path.splitext(src)
-            filename = filename.split("/")
-            filename = filename[len(filename)-1]+file_ext
+            memo["filename"], memo["file_ext"] = os.path.splitext(src)
+            memo["filename"] = memo["filename"].split("/")
+            memo["filename"] = memo["filename"][len(
+                memo["filename"])-1]+memo["file_ext"]
 
-            src = src[:src.find(filename)]
+            src = src[:src.find(memo["filename"])]
 
-            index = imported.find('![](')
+            index = memo["imported"].find('![](')
             while index != -1:
-                img_src_end = imported.find(')', index)
-                img_src = imported[index+4:img_src_end]
+                memo["img_src_end"] = memo["imported"].find(')', index)
+                memo["img_src"] = memo["imported"][index+4:memo["img_src_end"]]
 
-                img_name = img_src.split('/')
+                img_name = memo["img_src"].split('/')
                 img_name = img_name[len(img_name)-1]
-                img_name = filename + "/" + img_name
+                img_name = memo["filename"] + "/" + img_name
                 img_name = img_name if len(img_name) < 50 else img_name[:50]
 
-                img_src = os.path.normpath(os.path.join(src, img_src))
+                memo["img_src"] = os.path.normpath(
+                    os.path.join(src, memo["img_src"]))
 
                 img = self.image_service.get('name', img_name)
                 if len(img) > 0:
                     i = 0
                     while i < len(img):
                         imgs = img[i]
-                        status = True
+                        memo["status"] = True
                         if imgs.author != self.user_repository.get('id', get_id(author_id)):
-                            status = False
-                        if imgs.image != self.image_service.convert_image(img_src):
-                            status = False
-                        if status:
+                            memo["status"] = False
+                        if imgs.image != self.image_service.convert_image(memo["img_src"]):
+                            memo["status"] = False
+                        if memo["status"]:
                             img = imgs
                             break
                         i += 1
                     else:
                         img = None
                 img = img if img else self.image_service.create(
-                    author_id, img_name, img_src, 600)
+                    author_id, img_name, memo["img_src"], 600)
 
-                img_tag = ""
+                memo["img_tag"] = ""
                 if img:
-                    img_tag = "![]("+str(img.id)+')'
-                imported = imported[:index] + \
-                    img_tag+imported[img_src_end+1:]
-                index = imported.find('![](', index+1)
+                    memo["img_tag"] = "![]("+str(img.id)+')'
+                memo["imported"] = memo["imported"][:index] + \
+                    memo["img_tag"]+memo["imported"][memo["img_src_end"]+1:]
+                index = memo["imported"].find('![](', index+1)
 
-            title = "Imported from "+filename
-            title = title if len(title) < 50 else title[:50]
+            memo["title"] = "Imported from "+memo["filename"]
+            memo["title"] = memo["title"] if len(
+                memo["title"]) < 50 else memo["title"][:50]
 
-            return self.create(author_id, title, imported)
+            return self.create(author_id, memo["title"], memo["imported"])
         except ValueError:
             return None
 
