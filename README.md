@@ -18,7 +18,7 @@ Ohjelmalla hallitaan käyttäjän muistiinpanoja, joita voidaan käsitellä usea
 - [Työaikakirjanpito](./dokumentaatio/tyoaikakirjanpito.md)
 - [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuuri.md)
 - [Käyttöohje](./dokumentaatio/käyttöohje.md)
-- [Testausdokumentti](./dokumentaatio/testausraportti.md)
+- [Testausdokumentti](./dokumentaatio/testausdokumentti.md)
 
 ### Asentaminen
 

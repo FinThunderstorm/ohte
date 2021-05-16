@@ -31,9 +31,3 @@ Käyttöliittymän testaus on suoritettu manuaalisesti käyttäen sekä macOS-, 
 Sovellusta on kokeiltu noudattamalla käyttöohjeiden antamia ohjeita sovelluksen asentamisesta ja myös tilanteissa, joissa konfiguraatiotiedostoa ei ole luotu ennen ensimmäistä käyttökertaa.
 
 Kaikki sovelluksen käyttöohjeiden mukaiset päätoiminnallisuudet on testattu ja todettu toimiviksi. Myös virheellisten syötteiden antamista on testattu.
-
-## Sovelluksen laatuongelmat
-
-Sovelluksessa on pylintin osalta tehty seuraavat poikkeamat:
-
-- MemoRepositoryn rivillä 30, ImageRepositoryn rivillä 30 ja UserRepositoryn rivillä 35 on pylint poistettu käytöstä no-memberin osalta, koska pylint ei ymmärrä mongoenginen alaluokan omaavan tälläistä objects-arvoa, jonka Memon pääluokka Document tarjoaa.
