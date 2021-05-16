@@ -8,13 +8,13 @@ class TestConfig(unittest.TestCase):
     def setUp(self):
         self.file_service = file_service
         self.src = path.join(path.dirname(__file__), '..',
-                             './testdata', '.env.test')
+                             './testdata', '.test.env')
         self.src = path.normpath(self.src)
         self.config = Config(self.file_service, self.src)
 
     def test_initialize_premade_config_works(self):
         src = path.join(path.dirname(__file__), '..',
-                        './testdata', '.env.test')
+                        './testdata', '.test.env')
         src = path.normpath(src)
         config = Config(file_service, src)
 
