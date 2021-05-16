@@ -1,6 +1,6 @@
 # Käyttöohje
 
-Aloita lataamalla viimeisin [relase](https://github.com/FinThunderstorm/ohte/releases). Avaa terminaali/komentojana projektikansiosta.
+Aloita lataamalla viimeisin [release](https://github.com/FinThunderstorm/ohte/releases). Avaa terminaali/komentojana projektikansiosta.
 
 ## Asentaminen
 
