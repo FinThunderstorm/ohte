@@ -115,8 +115,6 @@ class MemoService:
         Modes:
             all: all memos in the database
             id: memo with given id
-            title: all memos with given title or part of it.
-            content: all memos with given content or part of it.
             author: all memos by given author
 
         Args:

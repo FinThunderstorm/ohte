@@ -115,8 +115,6 @@ class MemoRepository:
         cases = {
             "all": self.__get_all_memos(),
             "id": self.__get_id(search_term),
-            "title": self.__get_all_memos()(title__icontains=search_term),
-            "content": self.__get_all_memos()(content__icontains=search_term),
             "author": self.__get_author(search_term),
         }
         return cases[mode]

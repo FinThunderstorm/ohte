@@ -151,22 +151,6 @@ class TestMemoService(unittest.TestCase):
         queried_memo = self.memo_service.get('id', get_id())
         self.assertIsNone(queried_memo)
 
-    def test_get_title_returns_right_memos(self):
-        for i in range(3):
-            self.memo_service.create(
-                self.author.id, "CountXing " + str(i), "Testing them titles")
-        memos = self.memo_service.get("title", "countxing")
-        for memo in memos:
-            self.assertTrue("countxing".lower() in memo.title.lower())
-
-    def test_get_content_returns_right_amount(self):
-        for i in range(3):
-            self.memo_service.create(
-                self.author.id, "Testings " + str(i), "Testing them countYings")
-        memos = self.memo_service.get("content", "countying")
-        for memo in memos:
-            self.assertTrue("countying".lower() in memo.content.lower())
-
     def test_get_author_returns_right_amount(self):
         for i in range(3):
             self.memo_service.create(
@@ -203,20 +187,6 @@ class TestMemoService(unittest.TestCase):
     def test_count_not_valid_id_gives_zero(self):
         result = self.memo_service.count('id', get_id())
         self.assertEqual(result, 0)
-
-    def test_count_title_returns_right_amount(self):
-        for i in range(3):
-            self.memo_service.create(
-                self.author.id, "CountXing " + str(i), "Testing them titles")
-        result = self.memo_service.count("title", "countxing")
-        self.assertEqual(result, 3)
-
-    def test_count_content_returns_right_amount(self):
-        for i in range(3):
-            self.memo_service.create(
-                self.author.id, "Testings " + str(i), "Testing them countYings")
-        result = self.memo_service.count("content", "countying")
-        self.assertEqual(result, 3)
 
     def test_count_author_returns_right_amount(self):
         for i in range(3):

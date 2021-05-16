@@ -55,22 +55,6 @@ class TestMemoRepository(unittest.TestCase):
         result = self.memorepo.count('id', get_id())
         self.assertEqual(result, 0)
 
-    def test_count_title_returns_right_amount(self):
-        for i in range(3):
-            memo = get_test_memo()
-            memo["title"] = "CountXing them all"
-            self.memorepo.new(memo)
-        result = self.memorepo.count("title", "countxing")
-        self.assertEqual(result, 3)
-
-    def test_count_content_returns_right_amount(self):
-        for i in range(3):
-            memo = get_test_memo()
-            memo["content"] = "CountYing them all"
-            self.memorepo.new(memo)
-        result = self.memorepo.count("content", "countying")
-        self.assertEqual(result, 3)
-
     def test_count_author_returns_right_amount(self):
         for i in range(3):
             memo = get_test_memo()
@@ -149,24 +133,6 @@ class TestMemoRepository(unittest.TestCase):
     def test_get_unvalid_id(self):
         queried_memo = self.memorepo.get('id', get_id())
         self.assertIsNone(queried_memo)
-
-    def test_get_title_with_title_works(self):
-        self.memo["title"] = "Filtered memo"
-        saved_test_memo = self.memorepo.new(self.memo)
-        queried_memos = self.memorepo.get("title", "filtered")
-        self.assertEqual(queried_memos.count(), 1)
-        queried_memo = queried_memos.first()
-        self.assertEqual(queried_memo.id, saved_test_memo.id)
-        self.assertEqual(queried_memo.title, saved_test_memo.title)
-
-    def test_get_content_with_content_works(self):
-        self.memo["content"] = "Lorem ipsum FiLtErEd dolor sit amet."
-        saved_test_memo = self.memorepo.new(self.memo)
-        queried_memos = self.memorepo.get("content", "filtered")
-        self.assertEqual(queried_memos.count(), 1)
-        queried_memo = queried_memos.first()
-        self.assertEqual(queried_memo.id, saved_test_memo.id)
-        self.assertEqual(queried_memo.content, saved_test_memo.content)
 
     def test_get_author_id_with_author_works(self):
         user_two_memo = get_test_memo()
