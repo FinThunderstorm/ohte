@@ -130,6 +130,8 @@ Graafisen käyttöliittymän osalta pakkausrakenne ei ole optimaalinen. Rakenne 
 
 Näkymien komponentit, kuten tekstikentät tai painikkeet, sekä asettelut olisi tallennettu tästä erikseen vastaavan olion sisälle, jotta eri näkymät pystyisivät kutsumaan toinen toisiaan tarpeen vaatiessa.
 
+Käyttöliittymä antaa epämääräisiä virheilmoituksia terminaaliin suorituksen aikana suoritettaessa Ubuntussa. Vikaa tutkittaessa ongelma vaikutti juontavan juurensa [Qt:n debug-logitukseen](https://groups.google.com/g/qtcontribs/c/cWQgcrbKUCM?pli=1).
+
 Sovelluksessa on pylintin osalta tehty seuraavat poikkeamat:
 
 - MemoRepositoryn [rivillä 65](https://github.com/FinThunderstorm/ohte/blob/571fc100c8df5e5f39ade1c7398f1ff2fd809bca/src/repositories/memo_repository.py#L65), ImageRepositoryn [rivillä 67](https://github.com/FinThunderstorm/ohte/blob/571fc100c8df5e5f39ade1c7398f1ff2fd809bca/src/repositories/image_repository.py#L67) ja UserRepositoryn [rivillä 74](https://github.com/FinThunderstorm/ohte/blob/571fc100c8df5e5f39ade1c7398f1ff2fd809bca/src/repositories/user_repository.py#L74) on pylint poistettu käytöstä no-memberin osalta, koska pylint ei ymmärrä mongoenginen alaluokan omaavan tälläistä objects-arvoa, jonka Memon pääluokka Document tarjoaa.
