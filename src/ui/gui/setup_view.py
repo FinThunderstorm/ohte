@@ -204,6 +204,7 @@ class SetupView(QDialog):
             ErrorView(self.__screen, "Error while saving",
                       'There were a problem while trying to save. ' +
                       'Please check your input and try again.')
+            return
         firstname = self.objects[0]["settings_view"]["firstname_edit"].text()
         lastname = self.objects[0]["settings_view"]["lastname_edit"].text()
         password = self.objects[0]["settings_view"]["password_edit"].text()
@@ -222,12 +223,14 @@ class SetupView(QDialog):
             ErrorView(self.__screen, "Error while saving",
                       'There were a problem while trying to save. ' +
                       'Please check your input and try again.')
+            return
 
     def __handle_user_remove(self):
         if not self.__user[0]:
             ErrorView(self.__screen, "Error while removing",
                       'There were a problem while trying to remove. ' +
                       'Please try again.')
+            return
         res = self.__user_service.remove(self.__user[0].id)
         if res:
             self.frames[0]["memoview"].handle_logout()
@@ -236,6 +239,7 @@ class SetupView(QDialog):
             ErrorView(self.__screen, "Error while removing",
                       'There were a problem while trying to remove. ' +
                       'Please try again.')
+            return
 
     def __handle_settings_save(self):
         try:
